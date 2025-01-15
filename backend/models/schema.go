@@ -1,0 +1,40 @@
+package models
+
+import (
+  "gorm.io/gorm"
+  "time"
+)
+
+type User struct {
+  gorm.Model
+  ID           uint               `gorm:"primaryKey"`
+  CountryCode  string             `gorm:"index"`
+  Phone        uint               `gorm:"index"`
+  Name         string             `gorm:"index"`
+  Otp          string
+  Activated    bool
+  CreatedAt    time.Time
+  UpdatedAt    time.Time
+  DeletedAt    gorm.DeletedAt      `gorm:"index"`
+  Lat          float64             `gorm:"type:decimal(10,8)"`
+  Lng          float64             `gorm:"type:decimal(11,8)"`
+  
+  PrimaryJobId uint                `gorm:"index"`
+  SecondaryJobId uint              `gorm:"index"`
+  PrimaryJob   Job                 `gorm:"foreignKey:PrimaryJobId"`
+  SecondaryJob Job                 `gorm:"foreignKey:SecondaryJobId"`
+}
+
+type Job struct {
+  gorm.Model
+  ID           uint                `gorm:"primaryKey"`
+  Name         string              `gorm:"index"`
+}
+
+type JobTag struct {
+  gorm.Model
+  ID           uint                `gorm:"primaryKey"`
+  JobId        uint                `gorm:"index"`
+  Job          Job                 `gorm:"foreignKey:JobId"`
+  Tag          string              `gorm:"index"`
+}
