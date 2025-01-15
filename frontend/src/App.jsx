@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-      {import.meta.env.API_URL}
+      {import.meta.env.VITE_API_URL}
     </>
   )
 }

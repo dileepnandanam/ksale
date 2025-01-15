@@ -11,5 +11,8 @@ func main() {
   e.GET("/", func(c echo.Context) error {
     return c.String(http.StatusOK, "Hello, World!")
   })
+
+  e.Static("/", "frontend/dist")
+
   e.Logger.Fatal(e.Start(":3000"))
 }
