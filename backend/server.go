@@ -1,15 +1,15 @@
-package main
+package backend
 
 import (
-  "net/http"
   "gorm.io/driver/postgres"
   "gorm.io/gorm"
   "github.com/labstack/echo/v4"
   "fmt"
   "ksale/backend/models"
+  "ksale/backend/controllers"
 )
 
-func main() {
+func RunHTTPServer() {
   dsn := "host=localhost user=root password=root@2008 dbname=ksale port=5432 sslmode=disable TimeZone=Asia/Kolkata"
   db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
@@ -23,12 +23,10 @@ func main() {
   db.AutoMigrate(&models.Job{})
   db.AutoMigrate(&models.JobTag{})
 
-  e := echo.New()
-  e.GET("/", func(c echo.Context) error {
-    return c.String(http.StatusOK, "Hello, World!")
-  })
+  controllers.SetDb(db)
 
-  e.Static("/", "frontend/dist")
+  e := echo.New()
+  BindRoutes(e)
 
   e.Logger.Fatal(e.Start(":3000"))
 }
