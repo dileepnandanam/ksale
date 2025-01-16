@@ -6,7 +6,8 @@ import (
 )
 
 func BindRoutes(r *echo.Echo) {
-  r.Static("/", "frontend/dist")
+  r.Static("/assets", "frontend/dist/assets")
+
   r.GET("/api/jobs", controllers.JobList)
   r.POST("/api/jobs", controllers.JobCreate)
   r.DELETE("/api/jobs/:id", controllers.JobDelete)
@@ -16,4 +17,6 @@ func BindRoutes(r *echo.Echo) {
   r.POST("/api/job_tags", controllers.JobTagCreate)
   r.DELETE("/api/job_tags/:id", controllers.JobTagDelete)
   r.PUT("/api/job_tags/:id", controllers.JobTagUpdate)
+
+  r.File("/*", "frontend/dist/index.html")
 }

@@ -24,7 +24,8 @@ func JobTagList(c echo.Context) error {
   params := new(JobTagHTTP)
   c.Bind(params)
 
-  db.Model(&models.JobTag{JobId: params.JobId}).Find(&jobs)
+  fmt.Println(params.JobId)
+  db.Model(&models.JobTag{}).Where("job_id = ?", params.JobId).Find(&jobs)
 
   return c.JSON(http.StatusOK, jobs)
 }

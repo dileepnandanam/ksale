@@ -4,6 +4,7 @@ import (
   "gorm.io/driver/postgres"
   "gorm.io/gorm"
   "github.com/labstack/echo/v4"
+  "github.com/labstack/echo/v4/middleware"
   "fmt"
   "ksale/backend/models"
   "ksale/backend/controllers"
@@ -26,6 +27,10 @@ func RunHTTPServer() {
   controllers.SetDb(db)
 
   e := echo.New()
+  e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+    AllowOrigins: []string{"*"},
+    AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+  }))
   BindRoutes(e)
 
   e.Logger.Fatal(e.Start(":3000"))

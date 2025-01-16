@@ -1,8 +1,8 @@
 import React from "react";
-import TagManage from "./TagManage";
+import JobManage from "./JobManage";
 
 const Admin = () => {
-  return(<TagManage />)
+  return(<JobManage />)
 }
 
 export default Admin;

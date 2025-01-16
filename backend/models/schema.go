@@ -26,14 +26,14 @@ type User struct {
 
 type Job struct {
   gorm.Model
-  ID           uint                `gorm:"primaryKey"`
-  Name         string              `gorm:"index"`
+  ID           uint                `gorm:"primaryKey" json:"id"`
+  Name         string              `gorm:"index" json:"name"`
 }
 
 type JobTag struct {
   gorm.Model
-  ID           uint                `gorm:"primaryKey"`
+  ID           uint                `gorm:"primaryKey" json:"id"`
   JobId        uint                `gorm:"index"`
   Job          Job                 `gorm:"foreignKey:JobId"`
-  Tag          string              `gorm:"index"`
+  Tag          string              `gorm:"index" json:"tag"`
 }
