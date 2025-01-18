@@ -9,6 +9,7 @@ func BindRoutes(r *echo.Echo) {
   r.Static("/assets", "frontend/dist/assets")
 
   r.GET("/api/jobs", controllers.JobList)
+  r.GET("/api/jobs/search", controllers.JobSearch)
   r.POST("/api/jobs", controllers.JobCreate)
   r.DELETE("/api/jobs/:id", controllers.JobDelete)
   r.PUT("/api/jobs/:id", controllers.JobUpdate)

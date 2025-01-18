@@ -12,6 +12,7 @@ type JobSerializer struct {
 }
 
 type JobHTTP struct {
+  Key string `query:"key"`
   Name string `json:"name"`
   ID   uint   `json:"id" param:"id"`
 }
@@ -22,6 +23,22 @@ func JobList(c echo.Context) error {
   db.Model(&models.Job{}).Find(&jobs)
 
   return c.JSON(http.StatusOK, jobs)
+}
+
+func JobSearch(c echo.Context) error {
+  params := new(JobHTTP)
+  c.Bind(params)
+
+  type JobAndTag struct {
+    Name string `json:"name"`
+    Tag string `json:"tag"`
+  }
+
+  var results []JobAndTag
+
+  db.Model(&models.Job{}).Select("jobs.name, job_tags.tag").Joins("left join job_tags on job_tags.job_id = jobs.id").Where("jobs.name ILIKE ? OR job_tags.tag ILIKE ? OR jobs.name ILIKE ? OR job_tags.tag ILIKE ?", params.Key + "%", params.Key + "%", "% " + params.Key + "%", "% " + params.Key + "%").Scan(&results)
+
+  return c.JSON(http.StatusOK, results)
 }
 
 func JobCreate(c echo.Context) error {

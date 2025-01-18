@@ -4,7 +4,6 @@ import (
   "github.com/labstack/echo/v4"
   "net/http"
   "ksale/backend/models"
-  "fmt"
 )
 
 type JobTagSerializer struct {
@@ -24,7 +23,6 @@ func JobTagList(c echo.Context) error {
   params := new(JobTagHTTP)
   c.Bind(params)
 
-  fmt.Println(params.JobId)
   db.Model(&models.JobTag{}).Where("job_id = ?", params.JobId).Find(&jobs)
 
   return c.JSON(http.StatusOK, jobs)
