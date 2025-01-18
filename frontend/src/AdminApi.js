@@ -6,12 +6,17 @@ const url = (path) => {
 class AdminApi {
   static async getJobs(creds, params) {
     const results = await axios.get(url("jobs"))
-    return results
+    return results.data
+  }
+
+  static async searchJobs(creds, val) {
+    const results = await axios.get(url("jobs/search?key="+val))
+    return results.data
   }
 
   static async updateJob(creds, id, params) {
     const results = await axios.put(url(`jobs/${id}`), params)
-    return results
+    return results.data
   }
 
   static async createJob(creds, params) {
@@ -21,12 +26,12 @@ class AdminApi {
 
   static async getJobTags(creds, job_id, params) {
     const results = await axios.get(url(`jobs/${job_id}/job_tags`))
-    return results
+    return results.data
   }
 
   static async updateJobTag(creds, id, params) {
     const results = await axios.put(url(`job_tags/${id}`), params)
-    return results
+    return results.data
   }
 
   static async createJobTag(creds, params) {

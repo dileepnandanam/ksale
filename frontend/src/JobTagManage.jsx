@@ -7,7 +7,7 @@ const JobTagManage = ({ job }) => {
   useEffect(() => {
     const get = async () => {
       const result = await AdminApi.getJobTags({}, job.id)
-      setJobTags(result.data)
+      setJobTags(result)
     }
     get()
   }, [])
@@ -36,7 +36,7 @@ const JobTag = ({ tag }) => {
     <div style={{ width: "100%", padding: "12px", margin: "8px", display: "block" }}>
       <div style={{ marginRight: "12px", display: "inline-block" }}>tag name</div>
       <input style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
-      <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >Save</button>
+      {val.length > 0 && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >Save</button>}
     </div>
   )
 }
@@ -44,15 +44,15 @@ const JobTag = ({ tag }) => {
 const NewJobTag = ({ setJobTags, job }) => {
   const [val, setVal] = useState("")
   const save = async () => {
-    const result = await AdminApi.createJobTag({}, {job_id: job.id, tag: val})
+    const result = await AdminApi.createJobTag({}, {job_id: job.id, tag: val.toLowerCase()})
     setVal("")
     setJobTags((prev) => [result.data, ...prev])
   }
   return(
     <div style={{ width: "100%", padding: "12px", margin: "8px", display: "block" }}>
-      <div style={{ marginRight: "12px", display: "inline-block" }}>tag name</div>
+      <div style={{ marginRight: "12px", display: "inline-block" }}>new tag name</div>
       <input style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
-      <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >create</button>
+      {val.length > 0 && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >create</button>}
     </div>
   )
 }
