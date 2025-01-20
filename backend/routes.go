@@ -10,6 +10,7 @@ func BindRoutes(r *echo.Echo) {
 
   r.GET("/api/jobs", controllers.JobList)
   r.GET("/api/jobs/search", controllers.JobSearch)
+  r.GET("/api/jobs/prompt", controllers.JobPrompt)
   r.POST("/api/jobs", controllers.JobCreate)
   r.DELETE("/api/jobs/:id", controllers.JobDelete)
   r.PUT("/api/jobs/:id", controllers.JobUpdate)
@@ -18,6 +19,7 @@ func BindRoutes(r *echo.Echo) {
   r.POST("/api/job_tags", controllers.JobTagCreate)
   r.DELETE("/api/job_tags/:id", controllers.JobTagDelete)
   r.PUT("/api/job_tags/:id", controllers.JobTagUpdate)
+  r.PUT("/api/job_tags/:id/mark", controllers.JobTagMark)
 
   r.File("/*", "frontend/dist/index.html")
 }

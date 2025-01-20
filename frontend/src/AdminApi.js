@@ -14,6 +14,11 @@ class AdminApi {
     return results.data
   }
 
+  static async promptJobs(creds, val) {
+    const results = await axios.get(url("jobs/prompt?key="+val))
+    return results.data
+  }
+
   static async updateJob(creds, id, params) {
     const results = await axios.put(url(`jobs/${id}`), params)
     return results.data
@@ -31,6 +36,11 @@ class AdminApi {
 
   static async updateJobTag(creds, id, params) {
     const results = await axios.put(url(`job_tags/${id}`), params)
+    return results.data
+  }
+
+  static async markJobTag(creds, id, correct) {
+    const results = await axios.put(url(`job_tags/${id}/mark`), { correct: correct })
     return results.data
   }
 

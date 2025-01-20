@@ -32,11 +32,23 @@ const JobTag = ({ tag }) => {
   const save = async () => {
     const result = await AdminApi.updateJobTag({}, tag.id, {tag: val})
   }
+
+  const correct = async (correctness) => {
+    setCorrect(correctness)
+    const result = await AdminApi.markJobTag({}, tag.id, correctness)
+  }
+
+  const [isCorrect, setCorrect] = useState(tag.correct)
+
   return(
     <div style={{ width: "100%", padding: "12px", margin: "8px", display: "block" }}>
       <div style={{ marginRight: "12px", display: "inline-block" }}>tag name</div>
       <input style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
       {val.length > 0 && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >Save</button>}
+      {
+        isCorrect && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={async () => await correct(false)} >Correct</button> ||
+        <button style={{ marginRight: "12px", display: "inline-block" }} onClick={async () => await correct(true)} >Error</button>
+      }
     </div>
   )
 }

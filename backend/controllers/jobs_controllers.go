@@ -41,6 +41,29 @@ func JobSearch(c echo.Context) error {
   return c.JSON(http.StatusOK, results)
 }
 
+func JobPrompt(c echo.Context) error {
+  params := new(JobHTTP)
+  c.Bind(params)
+
+  type JobAndTag struct {
+    Name string `json:"name"`
+    Tags string `json:"tags"`
+    JobId uint `json:"id"`
+  }
+
+  var results []JobAndTag
+
+  db.Model(&models.Job{}).Select(
+    "jobs.name, array_to_string(ARRAY_REMOVE(ARRAY_AGG(DISTINCT correct_tag.tag), NULL), ', ') as tags, jobs.id AS id",
+  ).Joins(
+    "left join job_tags on job_tags.job_id = jobs.id left join job_tags correct_tag on correct_tag.job_id = jobs.id and correct_tag.correct = true",
+  ).Where(
+    "job_tags.tag ILIKE ? OR job_tags.tag ILIKE ?", params.Key + "%", "% " + params.Key + "%",
+  ).Group("jobs.id, jobs.name").Scan(&results)
+
+  return c.JSON(http.StatusOK, results)
+}
+
 func JobCreate(c echo.Context) error {
   params := new(JobHTTP)
   var existingJob models.Job
@@ -54,6 +77,8 @@ func JobCreate(c echo.Context) error {
 
   newJob := models.Job{Name: params.Name}
   db.Create(&newJob)
+  newJobTag := models.JobTag{Tag: params.Name, JobId: newJob.ID, Correct: true}
+  db.Create(&newJobTag)
 
   return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "job_created", "data": newJob })
 }

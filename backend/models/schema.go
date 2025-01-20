@@ -13,6 +13,7 @@ type User struct {
   Name           string             `gorm:"index"`
   Otp            string
   Activated      bool
+  BearerToken    string
   CreatedAt      time.Time
   UpdatedAt      time.Time
   DeletedAt      gorm.DeletedAt      `gorm:"index"`
@@ -36,4 +37,5 @@ type JobTag struct {
   JobId        uint                `gorm:"index"`
   Job          Job                 `gorm:"foreignKey:JobId"`
   Tag          string              `gorm:"index" json:"tag"`
+  Correct      bool                `json:"correct"`
 }
