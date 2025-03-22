@@ -4,6 +4,101 @@ import AdminApi from "./AdminApi";
 import Api from "./Api";
 import lodash from "lodash";
 
+export const Login = () => {
+  const [phone, setPhone] = useState("");
+  const [canGetOtp, setCanGetOtp] = useState();
+  const [otp, setOtp] = useState();
+  const [loged, setLoged] = useState();
+  const [errors, setErrors] = useState();
+
+  const getotp = async () => {
+    try {
+      const results = await Api.otpUser(Number(phone), "+91")
+      if (results.success) {
+        setCanGetOtp(results.data);
+        setErrors()
+      } else {
+        setErrors(results.message)
+      }
+    } catch(e) {}
+  }
+
+  const login = async () => {
+    try {
+      const results = await Api.loginUser(canGetOtp.ID ,Number(otp))
+      if (results.success) {
+        setLoged(true)
+        setErrors()
+      } else {
+        setErrors(results.message)
+      }
+    } catch(e) {}
+  }
+
+  return(
+    <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", height: "100vh" }}>
+      {
+        loged && <Navigate to="/" />
+      }
+      <div style={{ width: "100%", display: "block", padding: "20px 0px", borderBottom: "1px solid blue", padding: "12px" }}>
+        <div style={{ textAlign: "center", fontSize: "25px", display: "block", width: "80%", margin: "auto" }}>
+          Welcome
+        </div>
+      </div>
+
+      <div style={{ display: (errors ? "block" : "none"), width: "100%", padding: "12px", color: "red", background: "lightblue" }}>
+        {
+          errors && ({
+            phone_not_found: "Phone number not registered!",
+            invalid_otp: "Invalid OTP!"
+          })[errors]
+        }
+      </div>
+
+      <div style={{ width: "100%", display: (canGetOtp ? "none" : "block"), padding: "12px" }}>
+        <Input
+          isvalid={phone?.length == 10 && phone?.toLowerCase() == phone?.toUpperCase()}
+          setVal={setPhone}
+          prefix="+91"
+          val={phone}
+          label="Phone"
+          labelWidth="35%"
+          prefixWidth="15%"
+          inputWidth="45%"
+        />
+        <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
+            <button
+              onClick={getotp}
+              style={{ height: "50px", border: "none", fontSize: "23px", width: "100%", borderRadius: "12px", background: "green", color: "white", padding: "4px 8px" }}
+            >
+              Get OTP
+            </button>
+          </div>
+      </div>
+
+      <div style={{ width: "100%", display: (canGetOtp ? "block" : "none"), padding: "12px" }}>
+        <Input
+          isvalid={otp?.length == 4}
+          setVal={setOtp}
+          val={otp}
+          label="OTP"
+          labelWidth="35%"
+          inputWidth="60%"
+        />
+        <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
+            <button
+              onClick={login}
+              style={{ height: "50px", border: "none", fontSize: "23px", width: "100%", borderRadius: "12px", background: "green", color: "white", padding: "4px 8px" }}
+            >
+              Login
+            </button>
+          </div>
+      </div>
+    </div>
+  )
+
+}
+
 const Join = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -11,7 +106,10 @@ const Join = () => {
   const [selectedJobs, setSelectedJobs] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [jobKey, setJobKey] = useState("");
-  const [created, setCreated] = useState(false);;
+  const [created, setCreated] = useState(false);
+  const [canGetOtp, setCanGetOtp] = useState();
+  const [otp, setOtp] = useState();
+  const [errors, setErrors] = useState();
 
   const getJobs = async (jobKey) => {
     if (!jobKey) {
@@ -36,9 +134,24 @@ const Join = () => {
         secondary_job_id: selectedJobs[1]?.id
       })
       if (results.success) {
-        setCreated(true);
+        setCanGetOtp(results.data);
+        setErrors()
       } else {
-        setErrors(result.errors)
+        setErrors(results.message)
+      }
+    } catch(e) {}
+  }
+
+  const activateAcc = async () => {
+    try {
+      const results = await Api.activateUser(canGetOtp.ID, {
+        otp: Number(otp)
+      })
+      if (results.success) {
+        setCreated(true);
+        setErrors()
+      } else {
+        setErrors(results.message)
       }
     } catch(e) {}
   }
@@ -54,7 +167,35 @@ const Join = () => {
         </div>
       </div>
 
-      <div style={{ width: "100%", display: "block", padding: "12px" }}>
+      <div style={{ display: (errors ? "block" : "none"), width: "100%", padding: "12px", color: "red", background: "lightblue" }}>
+        {
+          errors && ({
+            already_exist: "Phone number already registered! Try login.",
+            could_not_activate_user: "Invalid OTP!"
+          })[errors]
+        }
+      </div>
+
+      <div style={{ width: "100%", display: (canGetOtp ? "block" : "none"), padding: "12px" }}>
+        <Input
+          isvalid={otp?.length == 4}
+          setVal={setOtp}
+          val={otp}
+          label="OTP"
+          labelWidth="35%"
+          inputWidth="60%"
+        />
+        <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
+            <button
+              onClick={activateAcc}
+              style={{ height: "50px", border: "none", fontSize: "23px", width: "100%", borderRadius: "12px", background: "green", color: "white", padding: "4px 8px" }}
+            >
+              Activate Account
+            </button>
+          </div>
+      </div>
+
+      <div style={{ width: "100%", display: (canGetOtp ? "none" : "block"), padding: "12px" }}>
         <Input
           isvalid={phone?.length == 10 && phone?.toLowerCase() == phone?.toUpperCase()}
           setVal={setPhone}

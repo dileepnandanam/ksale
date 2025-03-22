@@ -4,6 +4,8 @@ import (
   "github.com/labstack/echo/v4"
   "net/http"
   "ksale/backend/models"
+  "fmt"
+  "math/rand"
 )
 
 type UserHTTP struct {
@@ -13,10 +15,15 @@ type UserHTTP struct {
   Phone          uint `json:"phone"`
   PrimaryJobId   *uint `json:"primary_job_id"`
   SecondaryJobId *uint `json:"secondary_job_id"`
+  OneTimePassword uint `json:"otp"`
 }
 
 type UserSearchHTTP struct {
   Key string `query:"key"`
+}
+
+func rangeIn(low, hi int) int {
+  return low + rand.Intn(hi-low)
 }
 
 func UserCreate(c echo.Context) error {
@@ -26,14 +33,83 @@ func UserCreate(c echo.Context) error {
 
   result := db.Where(&models.User{CountryCode: params.CountryCode, Phone: params.Phone}).First(&existingUser)
 
-  if result.Error == nil {
-    return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"success": false, "message": "already_exist"})
+  if result.Error == nil && existingUser.Activated {
+    return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "already_exist"})
+  }
+
+  if result.Error == nil && existingUser.Activated == false {
+  	db.Delete(&models.User{}, existingUser.ID)
   }
 
   newUser := models.User{Name: params.Name, CountryCode: params.CountryCode, Phone: params.Phone, PrimaryJobId: params.PrimaryJobId, SecondaryJobId: params.SecondaryJobId}
+  newUser.OneTimePassword = uint(rangeIn(1000, 9999))
   db.Create(&newUser)
 
+  fmt.Println("OTP")
+  fmt.Println(newUser.OneTimePassword)
+  newUser.OneTimePassword = 0
+
   return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "user_created", "data": newUser })
+}
+
+
+type LoginHTTP struct {
+  Phone          uint `json:"phone"`
+  CountryCode   string `json:"country_code"`
+  OneTimePassword uint `json:"otp"`
+  ID              uint `json:"id"`
+
+}
+
+func UserGetOtp(c echo.Context) error {
+  params := new(LoginHTTP)
+  var existingUser models.User
+  c.Bind(params)
+
+  result := db.Where(&models.User{CountryCode: params.CountryCode, Phone: params.Phone}).First(&existingUser)
+
+  if result.Error == nil {
+  	existingUser.OneTimePassword = uint(rangeIn(1000, 9999))
+  	db.Save(&existingUser)
+  	fmt.Println("OTP")
+  	fmt.Println(existingUser.OneTimePassword)
+  	existingUser.OneTimePassword = 0
+    return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "otp_generated", "data": existingUser})
+  }
+  return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "phone_not_found"})
+}
+
+func UserLogin(c echo.Context) error {
+  params := new(LoginHTTP)
+  var existingUser models.User
+  c.Bind(params)
+
+  result := db.Where(&models.User{ID: params.ID}).First(&existingUser)
+
+  if result.Error == nil && existingUser.OneTimePassword == params.OneTimePassword {
+  	existingUser.OneTimePassword = 0
+  	existingUser.Activated = true
+  	db.Save(&existingUser)
+  	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "loged_in", "data": existingUser})
+  }
+
+  return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "invalid_otp"})
+}
+
+
+func UserActivate(c echo.Context) error {
+  params := new(UserHTTP)
+  var existingUser models.User
+  c.Bind(params)
+
+  result := db.Where(&models.User{ID: params.ID}).First(&existingUser)
+
+  if result.Error == nil && existingUser.OneTimePassword == params.OneTimePassword {
+  	existingUser.Activated = true
+  	db.Save(&existingUser)
+  	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "user_activated", "data": existingUser })
+  }
+  return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "could_not_activate_user" })
 }
 
 func UserSearch(c echo.Context) error {
@@ -63,7 +139,7 @@ func UserSearch(c echo.Context) error {
   ).Joins(
     "left join job_tags correct_tag on correct_tag.job_id = jobs.id and correct_tag.correct = true",
   ).Where(
-    "job_tags.tag ILIKE ? OR job_tags.tag ILIKE ?", params.Key + "%", "% " + params.Key + "%",
+    "users.activated = ? AND (job_tags.tag ILIKE ? OR job_tags.tag ILIKE ?)", true, params.Key + "%", "% " + params.Key + "%",
   ).Group("users.id, users.name, users.phone, users.country_code").Scan(&results)
 
   return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "searched", "data": results })

@@ -7,22 +7,22 @@ import (
 
 type User struct {
   gorm.Model
-  ID             uint               `gorm:"primaryKey"`
-  CountryCode    string             `gorm:"index"`
-  Phone          uint               `gorm:"index"`
-  Name           string             `gorm:"index"`
-  Otp            string
-  Activated      bool
-  BearerToken    string
-  CreatedAt      time.Time
-  UpdatedAt      time.Time
-  DeletedAt      gorm.DeletedAt      `gorm:"index"`
-  Lat            float64             `gorm:"type:decimal(10,8)"`
-  Lng            float64             `gorm:"type:decimal(11,8)"`
-  PrimaryJobId   *uint               `gorm:"index"`
-  SecondaryJobId *uint               `gorm:"index"`
-  PrimaryJob     Job                 `gorm:"foreignKey:PrimaryJobId"`
-  SecondaryJob   Job                 `gorm:"foreignKey:SecondaryJobId" gorm:"default:null"`
+  ID              uint               `gorm:"primaryKey"`
+  CountryCode     string             `gorm:"index"`
+  Phone           uint               `gorm:"index"`
+  Name            string             `gorm:"index"`
+  OneTimePassword uint
+  Activated       bool
+  BearerToken     string
+  CreatedAt       time.Time
+  UpdatedAt       time.Time
+  DeletedAt       gorm.DeletedAt      `gorm:"index"`
+  Lat             float64             `gorm:"type:decimal(10,8)"`
+  Lng             float64             `gorm:"type:decimal(11,8)"`
+  PrimaryJobId    *uint               `gorm:"index"`
+  SecondaryJobId  *uint               `gorm:"index"`
+  PrimaryJob      Job                 `gorm:"foreignKey:PrimaryJobId"`
+  SecondaryJob    Job                 `gorm:"foreignKey:SecondaryJobId" gorm:"default:null"`
 }
 
 type Job struct {
