@@ -21,5 +21,8 @@ func BindRoutes(r *echo.Echo) {
   r.PUT("/api/job_tags/:id", controllers.JobTagUpdate)
   r.PUT("/api/job_tags/:id/mark", controllers.JobTagMark)
 
+  r.POST("/api/users", controllers.UserCreate)
+  r.GET("/api/users", controllers.UserSearch)
+
   r.File("/*", "frontend/dist/index.html")
 }

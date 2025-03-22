@@ -48,7 +48,7 @@ func JobPrompt(c echo.Context) error {
   type JobAndTag struct {
     Name string `json:"name"`
     Tags string `json:"tags"`
-    JobId uint `json:"id"`
+    Id uint `json:"id"`
   }
 
   var results []JobAndTag

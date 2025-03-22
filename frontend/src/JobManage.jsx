@@ -78,7 +78,6 @@ const NewJob = ({ setJobs }) => {
       <div style={{ marginRight: "12px", display: "inline-block" }}>new job name</div>
       <input style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
       {val.length > 0 && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >create</button>}
-      
       {existing.length > 0 && 
         <>
           <h4>Similar jobs added</h4>

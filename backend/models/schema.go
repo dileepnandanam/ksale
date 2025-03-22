@@ -19,10 +19,10 @@ type User struct {
   DeletedAt      gorm.DeletedAt      `gorm:"index"`
   Lat            float64             `gorm:"type:decimal(10,8)"`
   Lng            float64             `gorm:"type:decimal(11,8)"`
-  PrimaryJobId   uint                `gorm:"index"`
-  SecondaryJobId uint                `gorm:"index"`
+  PrimaryJobId   *uint               `gorm:"index"`
+  SecondaryJobId *uint               `gorm:"index"`
   PrimaryJob     Job                 `gorm:"foreignKey:PrimaryJobId"`
-  SecondaryJob   Job                 `gorm:"foreignKey:SecondaryJobId"`
+  SecondaryJob   Job                 `gorm:"foreignKey:SecondaryJobId" gorm:"default:null"`
 }
 
 type Job struct {
