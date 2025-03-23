@@ -12,12 +12,14 @@ const Home = () => {
     const lng = localStorage.getItem("longitude")
 
     if (lat && lng) {
-      const results = await Api.searchUsers({}, key, lat, lng)
-      setUsers(results.data || [])
+      const results = await Api.searchUsers({}, key, lat, lng);
+      setUsers(results.data || []);
+    } else {
+      setUsers(defaults);
     }
   }
 
-  const [users, setUsers] = useState([{
+  const defaults = [{
     name: "Police",
     phone: 100,
     tags: "emergency"
@@ -29,16 +31,21 @@ const Home = () => {
     name: "Ambulance",
     phone: 108,
     tags: "emergency"
-  }]);
+  }]
+  const [users, setUsers] = useState(defaults);
+  const [askLoc, setAskLoc] = useState(!localStorage.getItem("latitude"))
 
   return(
     <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", minHeight: "100vh" }}>
       <div style={{ width: "100%", display: "block", padding: "20px 0px", background: "white" }}>
         <div style={{ display: "block", width: "90%", margin: "auto" }}>
-          <LocateButton style={{ verticalAlign: "bottom", height: "52px", display: "inline-block", width: "25%", borderRadius: "8px 0px 0px 8px", border: "1px solid #d0cfeb", borderRight: "none", padding: "8px 10px", background: "white" }} display="Locate" />
-          <input onChange={(e) => search(e.target.value)} style={{ verticalAlign: "bottom", height: "42px", display: "inline-block", width: "65%", borderRadius: "0px 8px 8px 0px", border: "1px solid #d0cfeb", outline: "none", padding: "4px 8px", fontSize: "22px" }} />
+          <input placeholder="Search" onChange={(e) => search(e.target.value)} style={{ verticalAlign: "bottom", height: "42px", display: "block", margin: "auto", width: "90%", borderRadius: "8", border: "1px solid #d0cfeb", outline: "none", padding: "4px 8px", fontSize: "22px" }} />
         </div>
       </div>
+
+      {
+        askLoc && <LocateButton onOk={() => setAskLoc(false)} display="Locate me" style={{ width: "100%", background: "green", textAlign: "center", padding: "12px 0px" }} />
+      }
 
       <div style={{ display: "block", width: "100%", padding: "12px" }}>
         {
@@ -70,18 +77,21 @@ const Home = () => {
           ))
         }
       </div>
-      <Link to="/join" style={{ textDecoration: "none" }}>
-        <div className="clickable" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "4px 8px" }}>
-          Join to get Work +
-        </div>
-        <div style={{ clear: "both" }} />
-      </Link>
-      <Link to="/login" style={{ textDecoration: "none" }}>
-        <div className="clickable" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "4px 8px" }}>
-          Login
-        </div>
-        <div style={{ clear: "both" }} />
-      </Link>
+      { !(user && user.Current()?.ID) && <>
+          <Link to="/join" style={{ textDecoration: "none" }}>
+            <div className="clickable" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "4px 8px" }}>
+              Join to get Work +
+            </div>
+            <div style={{ clear: "both" }} />
+          </Link>
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            <div className="clickable" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "4px 8px" }}>
+              Login
+            </div>
+            <div style={{ clear: "both" }} />
+          </Link>
+        </>
+      }
     </div>
   )
 }
