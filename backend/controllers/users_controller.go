@@ -47,6 +47,7 @@ func UserCreate(c echo.Context) error {
 
   fmt.Println("OTP")
   fmt.Println(newUser.OneTimePassword)
+  sendOTP(newUser)
   newUser.OneTimePassword = 0
 
   return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "user_created", "data": newUser })
@@ -73,6 +74,7 @@ func UserGetOtp(c echo.Context) error {
   	db.Save(&existingUser)
   	fmt.Println("OTP")
   	fmt.Println(existingUser.OneTimePassword)
+  	sendOTP(existingUser)
   	existingUser.OneTimePassword = 0
     return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "otp_generated", "data": existingUser})
   }
