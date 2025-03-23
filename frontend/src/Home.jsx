@@ -1,12 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router";
 import Api from "./Api";
 import phone from "./assets/phone.png";
+import { UserContext } from "./App";
+import LocateButton from "./LocateButton";
 
 const Home = () => {
+  const user = useContext(UserContext);
   const search = async (key) => {
-    const results = await Api.searchUsers({}, key)
-    setUsers(results.data || [])
+    const lat = localStorage.getItem("latitude")
+    const lng = localStorage.getItem("longitude")
+
+    if (lat && lng) {
+      const results = await Api.searchUsers({}, key, lat, lng)
+      setUsers(results.data || [])
+    }
   }
 
   const [users, setUsers] = useState([{
@@ -27,7 +35,7 @@ const Home = () => {
     <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", minHeight: "100vh" }}>
       <div style={{ width: "100%", display: "block", padding: "20px 0px", background: "white" }}>
         <div style={{ display: "block", width: "90%", margin: "auto" }}>
-          <div style={{ verticalAlign: "bottom", height: "52px", display: "inline-block", width: "25%", borderRadius: "8px 0px 0px 8px", border: "1px solid #d0cfeb", borderRight: "none", padding: "8px 10px", background: "white" }}>Search</div>
+          <LocateButton style={{ verticalAlign: "bottom", height: "52px", display: "inline-block", width: "25%", borderRadius: "8px 0px 0px 8px", border: "1px solid #d0cfeb", borderRight: "none", padding: "8px 10px", background: "white" }} display="Locate" />
           <input onChange={(e) => search(e.target.value)} style={{ verticalAlign: "bottom", height: "42px", display: "inline-block", width: "65%", borderRadius: "0px 8px 8px 0px", border: "1px solid #d0cfeb", outline: "none", padding: "4px 8px", fontSize: "22px" }} />
         </div>
       </div>

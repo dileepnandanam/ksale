@@ -14,10 +14,12 @@ class Api {
     return results.data
   }
 
-  static async searchUsers(creds, params) {
+  static async searchUsers(creds, key, lat, lng) {
     const results = await axios.get(url("users"), {
       params: {
-        key: params
+        key: key,
+        lat: lat,
+        lng: lng,
       }
     })
     return results.data
@@ -35,6 +37,14 @@ class Api {
     const results = await axios.put(url(`users/login`), {
       id: id,
       otp: otp
+    })
+    return results.data
+  }
+
+  static async locateUser(id, coords) {
+    const results = await axios.put(url(`users/locate`), {
+      id: id,
+      ...coords
     })
     return results.data
   }

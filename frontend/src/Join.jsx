@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, Navigate } from "react-router";
 import AdminApi from "./AdminApi";
 import Api from "./Api";
 import lodash from "lodash";
+import { UserContext } from "./App";
 
 export const Login = () => {
+  const user = useContext(UserContext);
   const [phone, setPhone] = useState("");
   const [canGetOtp, setCanGetOtp] = useState();
   const [otp, setOtp] = useState();
@@ -29,6 +31,7 @@ export const Login = () => {
       if (results.success) {
         setLoged(true)
         setErrors()
+        user.Set(results.data)
       } else {
         setErrors(results.message)
       }
@@ -100,6 +103,7 @@ export const Login = () => {
 }
 
 const Join = () => {
+  const user = useContext(UserContext);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
@@ -135,6 +139,7 @@ const Join = () => {
       })
       if (results.success) {
         setCanGetOtp(results.data);
+        user.Set(results.data)
         setErrors()
       } else {
         setErrors(results.message)

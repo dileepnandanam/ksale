@@ -6,8 +6,15 @@ import (
   "ksale/backend/models"
   "fmt"
   "math/rand"
+  crand "crypto/rand"
+  "encoding/base32"
 )
 
+type LocateHTTP struct {
+  ID             uint   `json:"id" param:"id"`
+  Lat            float64 `json:"lat"`
+  Lng            float64 `json:"lng"`
+}
 type UserHTTP struct {
   Name           string `json:"name"`
   ID             uint   `json:"id" param:"id"`
@@ -20,10 +27,21 @@ type UserHTTP struct {
 
 type UserSearchHTTP struct {
   Key string `query:"key"`
+  Lat            string `query:"lat"`
+  Lng            string `query:"lng"`
 }
 
 func rangeIn(low, hi int) int {
   return low + rand.Intn(hi-low)
+}
+
+func srand() string {
+  randomBytes := make([]byte, 32)
+  _, err := crand.Read(randomBytes)
+  if err != nil {
+      panic(err)
+  }
+  return base32.StdEncoding.EncodeToString(randomBytes)[:50]
 }
 
 func UserCreate(c echo.Context) error {
@@ -76,7 +94,7 @@ func UserGetOtp(c echo.Context) error {
   	fmt.Println(existingUser.OneTimePassword)
   	sendOTP(existingUser)
   	existingUser.OneTimePassword = 0
-    return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "otp_generated", "data": existingUser})
+    return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "otp_generated", "data": map[string]interface{}{ "ID": existingUser.ID }})
   }
   return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "phone_not_found"})
 }
@@ -91,11 +109,29 @@ func UserLogin(c echo.Context) error {
   if result.Error == nil && existingUser.OneTimePassword == params.OneTimePassword {
   	existingUser.OneTimePassword = 0
   	existingUser.Activated = true
+  	existingUser.BearerToken = srand()
   	db.Save(&existingUser)
-  	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "loged_in", "data": existingUser})
+  	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "loged_in", "data": map[string]interface{}{ "ID": existingUser.ID, "token": existingUser.BearerToken, "name": existingUser.Name }})
   }
 
   return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "invalid_otp"})
+}
+
+func UserLocate(c echo.Context) error {
+  params := new(LocateHTTP)
+  var existingUser models.User
+  c.Bind(params)
+
+  result := db.Where(&models.User{ID: params.ID}).First(&existingUser)
+
+  if result.Error == nil {
+  	existingUser.Lat = params.Lat
+  	existingUser.Lng = params.Lng
+  	db.Save(&existingUser)
+  	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "loged_in", "data": map[string]interface{}{ "ID": existingUser.ID } })
+  }
+
+  return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "located"})
 }
 
 
@@ -108,8 +144,9 @@ func UserActivate(c echo.Context) error {
 
   if result.Error == nil && existingUser.OneTimePassword == params.OneTimePassword {
   	existingUser.Activated = true
+  	existingUser.BearerToken = srand()
   	db.Save(&existingUser)
-  	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "user_activated", "data": existingUser })
+  	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "user_activated", "data": map[string]interface{}{ "ID": existingUser.ID, "token": existingUser.BearerToken, "name": existingUser.Name } })
   }
   return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "could_not_activate_user" })
 }
@@ -131,6 +168,7 @@ func UserSearch(c echo.Context) error {
   	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "searched", "data": nil })
   }
 
+  order := "distance(users.lat, users.lng," + params.Lat + "," + params.Lng + ") ASC"
 
 	db.Model(&models.User{}).Select(
     "users.name, users.phone, users.country_code, array_to_string(ARRAY_REMOVE(ARRAY_AGG(DISTINCT correct_tag.tag), NULL), ', ') as tags",
@@ -141,7 +179,9 @@ func UserSearch(c echo.Context) error {
   ).Joins(
     "left join job_tags correct_tag on correct_tag.job_id = jobs.id and correct_tag.correct = true",
   ).Where(
-    "users.activated = ? AND (job_tags.tag ILIKE ? OR job_tags.tag ILIKE ?)", true, params.Key + "%", "% " + params.Key + "%",
+    "users.lat > 0 AND users.activated = ? AND (job_tags.tag ILIKE ? OR job_tags.tag ILIKE ?)", true, params.Key + "%", "% " + params.Key + "%",
+  ).Order(
+  	order,
   ).Group("users.id, users.name, users.phone, users.country_code").Scan(&results)
 
   return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "searched", "data": results })
