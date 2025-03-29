@@ -3,6 +3,22 @@ const url = (path) => {
   return `${import.meta.env.VITE_API_URL}/api/${path}`
 }
 
+const user = () => {
+  const saved = localStorage.getItem("currentUser")
+  try {
+    return JSON.parse(saved)
+  } catch(e) {
+    return({})
+  }
+}
+
+axios.interceptors.request.use((cfg) => {
+  const u = user()
+  cfg.headers["Authorization"] = u.token
+  cfg.headers["X-User-ID"] = u.ID
+  return cfg
+}, (e) => Promise.reject(error))
+
 class Api {
   static async createUser(creds, params) {
     const results = await axios.post(url("users"), params)

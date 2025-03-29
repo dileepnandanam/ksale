@@ -5,6 +5,19 @@ import Api from "./Api";
 import lodash from "lodash";
 import { UserContext } from "./App";
 
+const Nav = () => {
+  return(
+    <div style={{ display: "block", background: "white", padding: "6px" }}>
+      <Link style={{ textDecoration: "none" }} to="/">
+        <div className="clickable rounded-4" style={{ float: "right", textDecoration: "none", padding: "8px", color: "black" }}>
+          Home
+        </div>
+      </Link>
+      <div style={{ clear: "both" }} />
+    </div>
+  )
+}
+
 export const Login = () => {
   const user = useContext(UserContext);
   const [phone, setPhone] = useState("");
@@ -40,6 +53,7 @@ export const Login = () => {
 
   return(
     <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", height: "100vh" }}>
+      <Nav />
       {
         loged && <Navigate to="/" />
       }
@@ -166,6 +180,7 @@ const Join = () => {
       {
         created && <Navigate to="/" />
       }
+      <Nav />
       <div style={{ width: "100%", display: "block", padding: "20px 0px", borderBottom: "1px solid blue", padding: "12px" }}>
         <div style={{ textAlign: "center", fontSize: "25px", display: "block", width: "80%", margin: "auto" }}>
           Welcome, Fill your work details
@@ -258,7 +273,7 @@ const Join = () => {
           <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
             <button
               onClick={createAcc}
-              style={{ height: "50px", border: "none", fontSize: "23px", width: "100%", borderRadius: "12px", background: "green", color: "white", padding: "4px 8px" }}
+              style={{ height: "50px", border: "none", fontSize: "23px", width: "100%", borderRadius: "12px", background: "green", color: "white", padding: "4px 8px", marginTop: "20px" }}
             >
               Create Account
             </button>

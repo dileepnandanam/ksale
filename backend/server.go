@@ -37,11 +37,12 @@ func RunHTTPServer() {
   db.Exec(geo)
 
   controllers.SetDb(db)
+  SetDb(db)
 
   e := echo.New()
   e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
     AllowOrigins: []string{"*"},
-    AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+    AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, "Authorization", "X-User-ID"},
   }))
   BindRoutes(e)
 

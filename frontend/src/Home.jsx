@@ -5,9 +5,19 @@ import phone from "./assets/phone.png";
 import { UserContext } from "./App";
 import LocateButton from "./LocateButton";
 
-const Home = () => {
+const Home = ({ located, setLocated }) => {
   const user = useContext(UserContext);
+
+  const [locError, setLocError] = useState("");
+  const [locating, setLocating] = useState(false);
+
   const search = async (key) => {
+
+    if (!key) {
+      setUsers(defaults)
+      return
+    }
+
     const lat = localStorage.getItem("latitude")
     const lng = localStorage.getItem("longitude")
 
@@ -34,17 +44,30 @@ const Home = () => {
   }]
   const [users, setUsers] = useState(defaults);
   const [askLoc, setAskLoc] = useState(!localStorage.getItem("latitude"))
+  const [key, setKey] = useState("emergency");
 
   return(
     <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", minHeight: "100vh" }}>
       <div style={{ width: "100%", display: "block", padding: "20px 0px", background: "white" }}>
         <div style={{ display: "block", width: "90%", margin: "auto" }}>
-          <input placeholder="Search" onChange={(e) => search(e.target.value)} style={{ verticalAlign: "bottom", height: "42px", display: "block", margin: "auto", width: "90%", borderRadius: "8", border: "1px solid #d0cfeb", outline: "none", padding: "4px 8px", fontSize: "22px" }} />
+          <input placeholder="Search" value={key} onChange={(e) => { setKey(e.target.value); search(e.target.value)}} style={{ verticalAlign: "bottom", height: "42px", display: "block", margin: "auto", width: "90%", borderRadius: "8", border: "1px solid #d0cfeb", outline: "none", padding: "4px 8px", fontSize: "22px" }} />
         </div>
       </div>
 
       {
-        askLoc && <LocateButton onOk={() => setAskLoc(false)} display="Locate me" style={{ width: "100%", background: "green", textAlign: "center", padding: "12px 0px" }} />
+        located == false && <div style={{ display: "block", borderRadius: "8px", padding: "12px", background: "white", margin: "12px" }}>
+          <div style={{ width: "100%", textAlign: "center", marginBottom: "12px" }}>
+            We need current location to search nearby workers
+          </div>
+          <LocateButton className="rounded-8" setLocating={setLocating} onError={(message) => setLocError(message || "Could not locate. Allow access to location.")} onOk={() => setLocated(true)} style={{ textAlign: "center", width: "250px", display: "block", margin: "auto", padding: "8px", background: locating ? "grey" : "green" }}>
+            {
+              locating && "Locating" || (localStorage.getItem("latitude") ? "Update Location" : "Locate Me")
+            }
+          </LocateButton>
+          {
+            locError && <div style={{ width: "100%", display: "block", textAlign: "center", color: "red", padding: "12px" }}>{locError}</div>
+          }
+        </div>
       }
 
       <div style={{ display: "block", width: "100%", padding: "12px" }}>
@@ -62,7 +85,15 @@ const Home = () => {
                 </div>
                 <div style={{ display: "block", width: "100%" }}>
                   {(user.tags || "").split(", ").map((tag) => (
-                    <div style={{ fontSize: "18px", display: "inline-block", float: "left", padding: "3px 8px", margin: "3px 8px 0px 0px", border: "1px solid #cfcfe9", background: "white", borderRadius: "4px" }}>
+                    <div
+                      onClick={async () => {
+                        if (tag != "emergency") {
+                          setKey(tag);
+                          await search(tag);
+                        }
+                      }}
+                      style={{ fontSize: "18px", display: "inline-block", float: "left", padding: "3px 8px", margin: "3px 8px 0px 0px", border: "1px solid #cfcfe9", background: "white", borderRadius: "4px" }}
+                    >
                       {tag}
                     </div>
                   ))}
@@ -79,13 +110,13 @@ const Home = () => {
       </div>
       { !(user && user.Current()?.ID) && <>
           <Link to="/join" style={{ textDecoration: "none" }}>
-            <div className="clickable" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "4px 8px" }}>
+            <div className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>
               Join to get Work +
             </div>
             <div style={{ clear: "both" }} />
           </Link>
           <Link to="/login" style={{ textDecoration: "none" }}>
-            <div className="clickable" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "4px 8px" }}>
+            <div className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>
               Login
             </div>
             <div style={{ clear: "both" }} />

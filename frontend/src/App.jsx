@@ -9,6 +9,7 @@ export const UserContext = React.createContext()
 
 function App() {
   const [count, setCount] = useState(0)
+  const [located, setLocated] = useState(false);
 
   const user = {
     Current: () => {
@@ -28,7 +29,7 @@ function App() {
     <UserContext.Provider value={user}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home located={located} setLocated={setLocated} />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/join" element={<Join />} />
           <Route path="/login" element={<Login />} />
