@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { Link } from "react-router";
 import Api from "./Api";
 import phone from "./assets/phone.png";
 import { UserContext } from "./App";
 import LocateButton from "./LocateButton";
+import { debounce } from "lodash";
 
 const Home = ({ located, setLocated }) => {
   const user = useContext(UserContext);
@@ -11,7 +12,7 @@ const Home = ({ located, setLocated }) => {
   const [locError, setLocError] = useState("");
   const [locating, setLocating] = useState(false);
 
-  const search = async (key) => {
+  const search = useCallback(debounce(async (key) => {
 
     if (!key) {
       setUsers(defaults)
@@ -27,7 +28,7 @@ const Home = ({ located, setLocated }) => {
     } else {
       setUsers(defaults);
     }
-  }
+  }, 500), [])
 
   const defaults = [{
     name: "Police",

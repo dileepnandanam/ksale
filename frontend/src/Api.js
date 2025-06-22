@@ -14,8 +14,8 @@ const user = () => {
 
 axios.interceptors.request.use((cfg) => {
   const u = user()
-  cfg.headers["Authorization"] = u.token
-  cfg.headers["X-User-ID"] = u.ID
+  cfg.headers["Authorization"] = u?.token
+  cfg.headers["X-User-ID"] = u?.ID
   return cfg
 }, (e) => Promise.reject(error))
 

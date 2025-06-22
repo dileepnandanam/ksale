@@ -119,8 +119,10 @@ func UserLogin(c echo.Context) error {
 
 func UserLocate(c echo.Context) error {
   params := new(LocateHTTP)
-  var existingUser models.User
+
   c.Bind(params)
+
+  existingUser := c.Get("currentUser").(models.User)
 
   result := db.Where(&models.User{ID: params.ID}).First(&existingUser)
 
@@ -128,10 +130,10 @@ func UserLocate(c echo.Context) error {
   	existingUser.Lat = params.Lat
   	existingUser.Lng = params.Lng
   	db.Save(&existingUser)
-  	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "loged_in", "data": map[string]interface{}{ "ID": existingUser.ID } })
+  	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "located", "data": map[string]interface{}{ "ID": existingUser.ID } })
   }
 
-  return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "located"})
+  return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "not_located"})
 }
 
 

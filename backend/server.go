@@ -6,12 +6,19 @@ import (
   "github.com/labstack/echo/v4"
   "github.com/labstack/echo/v4/middleware"
   "fmt"
+  "os"
   "ksale/backend/models"
   "ksale/backend/controllers"
 )
 
 func RunHTTPServer() {
-  dsn := "host=localhost user=root password=root@2008 dbname=ksale port=5432 sslmode=disable TimeZone=Asia/Kolkata"
+  host := "host=" + os.Getenv("DB_HOST") + " "
+  password := "password=" + os.Getenv("DB_PASSWORD") + " "
+  dbname := "dbname=" + os.Getenv("DB_NAME") + " "
+  port := "port=" + os.Getenv("DB_PORT") + " "
+  user := "user=" + os.Getenv("DB_USER") + " "
+
+  dsn := host + user + password + dbname + port + " sslmode=disable TimeZone=Asia/Kolkata"
   db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
   if (err != nil) {
