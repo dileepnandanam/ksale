@@ -18,7 +18,7 @@ func RunHTTPServer() {
   port := "port=" + os.Getenv("DB_PORT") + " "
   user := "user=" + os.Getenv("DB_USER") + " "
 
-  dsn := host + user + password + dbname + port + " sslmode=disable TimeZone=Asia/Kolkata"
+  dsn := host + user + password + dbname + port + " sslmode=allow TimeZone=Asia/Kolkata"
   db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
   if (err != nil) {
