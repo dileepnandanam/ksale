@@ -153,7 +153,6 @@ const Join = () => {
       })
       if (results.success) {
         setCanGetOtp(results.data);
-        user.Set(results.data)
         setErrors()
       } else {
         setErrors(results.message)
@@ -169,6 +168,7 @@ const Join = () => {
       if (results.success) {
         setCreated(true);
         setErrors()
+        user.Set(results.data)
       } else {
         setErrors(results.message)
       }
