@@ -125,14 +125,10 @@ func UserGet(c echo.Context) error {
   result := db.Where(&models.User{ID: uint(uID), BearerToken: token}).First(&existingUser)
 
   if result.Error == nil {
-    existingUser.OneTimePassword = 0
-    existingUser.Activated = true
-    existingUser.BearerToken = srand()
-    db.Save(&existingUser)
     return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "loged_in", "data": map[string]interface{}{ "ID": existingUser.ID, "token": existingUser.BearerToken, "name": existingUser.Name }})
   }
 
-  return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "invalid_otp"})
+  return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "invalid_user"})
 }
 
 func UserLocate(c echo.Context) error {

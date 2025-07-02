@@ -34,7 +34,7 @@ func CurrentUserMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		if result.Error != nil || existingUser.ID == 0 {
 			return c.JSON(http.StatusUnauthorized, map[string]string{
 				"message": "Missing User",
-				"error": "missing_user_for_user",
+				"error": "missing_user_for_token",
 			})
 		}
 
