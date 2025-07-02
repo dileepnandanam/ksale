@@ -43,7 +43,7 @@ function App() {
       const res = await Api.getUser()
       user.set(res)
     } catch (e) {
-      user.Unset()
+      //user.Unset()
     }
   }
 
