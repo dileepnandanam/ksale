@@ -41,7 +41,7 @@ function App() {
   const checkUser = async () => {
     try {
       const res = await Api.getUser()
-      user.set(res)
+      user.Set(res.data)
     } catch (e) {
       user.Unset()
     }
