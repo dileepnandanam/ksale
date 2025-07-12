@@ -28,8 +28,8 @@ type UserJob struct {
   JobId           *uint               `gorm:"index"`
   User            User                `gorm:"foreignKey:UserId"`
   Job             Job                 `gorm:"foreignKey:JobId"`
-  CreatedAt       time.Time
-  UpdatedAt       time.Time
+  CreatedAt       time.Time           `gorm:"autoCreateTime:milli"`
+  UpdatedAt       time.Time           `gorm:"autoUpdateTime:milli"`
 }
 
 type Job struct {
