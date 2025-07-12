@@ -19,17 +19,17 @@ type User struct {
   DeletedAt       gorm.DeletedAt      `gorm:"index"`
   Lat             float64             `gorm:"type:decimal(10,8)"`
   Lng             float64             `gorm:"type:decimal(11,8)"`
-  Jobs            []Job               `gorm:"many2many:user_jobs"`
 }
 
 type UserJob struct {
+  gorm.Model
   ID              uint                `gorm:"primaryKey"`
   UserId          *uint               `gorm:"index"`
   JobId           *uint               `gorm:"index"`
   User            User                `gorm:"foreignKey:UserId"`
   Job             Job                 `gorm:"foreignKey:JobId"`
-  CreatedAt       time.Time           `gorm:"autoCreateTime:milli"`
-  UpdatedAt       time.Time           `gorm:"autoUpdateTime:milli"`
+  CreatedAt       time.Time
+  UpdatedAt       time.Time
 }
 
 type Job struct {
