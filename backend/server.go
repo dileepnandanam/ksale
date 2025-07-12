@@ -30,6 +30,7 @@ func RunHTTPServer() {
   db.AutoMigrate(&models.User{})
   db.AutoMigrate(&models.Job{})
   db.AutoMigrate(&models.JobTag{})
+  db.AutoMigrate(&models.UserJob{})
 
   geo := `
     CREATE OR REPLACE FUNCTION distance(lat1 FLOAT, lon1 FLOAT, lat2 FLOAT, lon2 FLOAT) RETURNS FLOAT AS $$

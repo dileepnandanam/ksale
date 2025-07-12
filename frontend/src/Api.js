@@ -25,6 +25,11 @@ class Api {
     return results.data
   }
 
+  static async updateUser(creds, params, id) {
+    const results = await axios.put(url("users/" + id), params)
+    return results.data
+  }
+
   static async activateUser(id, params) {
     const results = await axios.put(url("users/" + id + "/activate"), params)
     return results.data
@@ -46,6 +51,11 @@ class Api {
       phone: phone,
       country_code: code,
     })
+    return results.data
+  }
+
+  static async getUserProfile(id) {
+    const results = await axios.get(url("users/" + id))
     return results.data
   }
 

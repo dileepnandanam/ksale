@@ -5,7 +5,7 @@ import Api from "./Api";
 import lodash from "lodash";
 import { UserContext } from "./App";
 
-const Nav = () => {
+export const Nav = () => {
   return(
     <div style={{ display: "block", background: "white", padding: "6px" }}>
       <Link style={{ textDecoration: "none" }} to="/">
@@ -148,8 +148,7 @@ const Join = () => {
         name: name,
         country_code: "+91",
         phone: Number(phone),
-        primary_job_id: selectedJobs[0].id,
-        secondary_job_id: selectedJobs[1]?.id
+        job_ids: selectedJobs.map((j) => j.id),
       })
       if (results.success) {
         setCanGetOtp(results.data);
@@ -235,6 +234,7 @@ const Join = () => {
           inputWidth="60%"
         />
         <Input
+          placeholder="Search your job"
           isvalid={true}
           val={jobKey}
           setVal={(val) => {
@@ -252,10 +252,6 @@ const Join = () => {
               <div
                 className="clickable"
                 onClick={() => {
-                  if (selectedJobs.length > 1) {
-                    setSelectedJobs((jobs) => jobs.filter((j) => j.id != job.id))
-                    return
-                  }
                   if (!selectedJobs.find(selected => selected.id == job.id)) {
                     setSelectedJobs((jobs) => [job, ...jobs])
                   } else {
@@ -286,7 +282,7 @@ const Join = () => {
 
 export default Join;
 
-const Input = (props) => {
+export const Input = (props) => {
   return(
     <div style={{ display: "inline-block", width: "100%", margin: "4px 0px" }}>
       {
@@ -303,6 +299,8 @@ const Input = (props) => {
       }
       <div style={{ display: "inline-block", width: props.inputWidth }}>
         <input
+          placeholder={props.placeholder}
+          disabled={props.disabled ? "disabled" : ""}
           style={{ border: (props.isvalid ? "1px solid black" : "2px solid red"), fontSize: "22px", width: "100%" }}
           className="general"
           onChange={(e) => {

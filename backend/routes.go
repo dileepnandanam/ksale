@@ -28,6 +28,8 @@ func BindRoutes(r *echo.Echo) {
   r.PUT("/api/users/login", controllers.UserLogin)
   r.PUT("/api/users/locate", controllers.UserLocate, CurrentUserMiddleware)
   r.GET("/api/users/current", controllers.UserGet, CurrentUserMiddleware)
+  r.GET("/api/users/:id", controllers.GetUser, CurrentUserMiddleware)
+  r.PUT("/api/users/:id", controllers.UpdateUser, CurrentUserMiddleware)
 
   r.File("/*", "frontend/dist/index.html")
 }

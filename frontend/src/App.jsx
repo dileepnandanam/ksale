@@ -3,6 +3,7 @@ import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router";
 import Admin from "./Admin";
 import Home from "./Home";
+import Profile from "./Profile";
 import Join, { Login } from "./Join";
 import Api from "./Api";
 
@@ -55,6 +56,7 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/join" element={<Join />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>
     </UserContext.Provider>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import Api from "./Api";
 import phone from "./assets/phone.png";
 import { UserContext } from "./App";
@@ -114,6 +114,9 @@ const Home = ({ located, setLocated }) => {
           <div onClick={() => user.Unset()} className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>
             Log Out
           </div>
+          <Link to="profile" className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>
+            Account
+          </Link>
         </> || <>
           <Link to="/join" style={{ textDecoration: "none" }}>
             <div className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>
