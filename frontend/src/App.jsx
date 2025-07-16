@@ -14,6 +14,9 @@ function App() {
   const [located, setLocated] = useState(false);
 
   const user = {
+    setOnetimeMessage: (msg) => {
+      setMessage(msg)
+    },
     Current: () => (currentUser),
     Fetch: () => {
       const saved = localStorage.getItem("currentUser")
@@ -39,6 +42,12 @@ function App() {
     checkUser()
   }, [])
 
+  const [message, setMessage] = useState();
+  useEffect(() => {
+    if (message) {
+      setTimeout(() => setMessage(null), message.timeout)
+    }
+  }, [message])
   const checkUser = async () => {
     try {
       const res = await Api.getUser()
@@ -50,6 +59,11 @@ function App() {
 
   return (
     <UserContext.Provider value={user}>
+      { message &&
+        <div style={{ textAlign: "center", fontSize: "20px", width: "100%", padding: "12px" }} className={message.type}>
+          {message.text}
+        </div>
+      }
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home located={located} setLocated={setLocated} />} />

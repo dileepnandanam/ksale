@@ -23,6 +23,7 @@ const LocateButton = (props) => {
         user.Unset()
         props.onError("Something Went Wrong.")
       }
+      user.setOnetimeMessage({ text: "Your location is Updated.", type: "success", timeout: 3000 })
     }, (e) => {
       props.onError()
     })

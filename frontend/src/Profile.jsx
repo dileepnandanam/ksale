@@ -6,6 +6,7 @@ import Api from "./Api";
 import lodash from "lodash";
 import { UserContext } from "./App";
 import { Nav } from "./Join";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
   const user = useContext(UserContext);
@@ -58,13 +59,19 @@ const Profile = () => {
     } catch(e) {}
   }
 
+  let navigate = useNavigate()
+
   useEffect(() => { getUser() }, [])
+  useEffect(() => {
+
+    if (updated) {
+      user.setOnetimeMessage({ text: "Account Updated.", type: "success", timeout: 3000 })
+      navigate("/")
+    }
+  }, [updated])
 
   return(
     <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", height: "100vh" }}>
-      {
-        updated && <Navigate to="/" />
-      }
       <Nav />
       <div style={{ width: "100%", display: "block", padding: "20px 0px", borderBottom: "1px solid blue", padding: "12px" }}>
         <div style={{ textAlign: "center", fontSize: "25px", display: "block", width: "80%", margin: "auto" }}>

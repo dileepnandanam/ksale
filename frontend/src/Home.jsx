@@ -111,7 +111,13 @@ const Home = ({ located, setLocated }) => {
       </div>
       {
         (user && user.Current()?.ID) && <>
-          <div onClick={() => user.Unset()} className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>
+          <div
+            onClick={() => {
+              user.Unset();
+              user.setOnetimeMessage({ text: "Log out successfull.", type: "success", timeout: 3000 })
+            }}
+            className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}
+          >
             Log Out
           </div>
           <Link to="profile" className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>

@@ -45,6 +45,7 @@ export const Login = () => {
         setLoged(true)
         setErrors()
         user.Set(results.data)
+        user.setOnetimeMessage({ text: "Log in successfull.", type: "success", timeout: 3000 })
       } else {
         setErrors(results.message)
       }
@@ -153,6 +154,7 @@ const Join = () => {
       if (results.success) {
         setCanGetOtp(results.data);
         setErrors()
+        user.setOnetimeMessage({ text: "Sending OTP to your mobile number.", type: "success", timeout: 3000 })
       } else {
         setErrors(results.message)
       }
@@ -168,6 +170,7 @@ const Join = () => {
         setCreated(true);
         setErrors()
         user.Set(results.data)
+        user.setOnetimeMessage({ text: "Account Created.", type: "success", timeout: 3000 })
       } else {
         setErrors(results.message)
       }

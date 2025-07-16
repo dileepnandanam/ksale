@@ -19,6 +19,7 @@ type User struct {
   DeletedAt       gorm.DeletedAt      `gorm:"index"`
   Lat             float64             `gorm:"type:decimal(10,8)"`
   Lng             float64             `gorm:"type:decimal(11,8)"`
+  Admin           bool
 }
 
 type UserJob struct {
