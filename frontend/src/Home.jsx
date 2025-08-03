@@ -30,7 +30,8 @@ const Home = ({ located, setLocated }) => {
     }
   }, 500), [])
 
-  const defaults = [{
+  const defaults = []
+  const defaultss = [{
     name: "Police",
     phone: 100,
     tags: "emergency"
@@ -45,22 +46,25 @@ const Home = ({ located, setLocated }) => {
   }]
   const [users, setUsers] = useState(defaults);
   const [askLoc, setAskLoc] = useState(!localStorage.getItem("latitude"))
-  const [key, setKey] = useState("emergency");
+  const [key, setKey] = useState("");
 
   return(
-    <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", minHeight: "100vh" }}>
-      <div style={{ width: "100%", display: "block", padding: "20px 0px", background: "white" }}>
-        <div style={{ display: "block", width: "90%", margin: "auto" }}>
-          <input placeholder="Search" value={key} onChange={(e) => { setKey(e.target.value); search(e.target.value)}} style={{ verticalAlign: "bottom", height: "42px", display: "block", margin: "auto", width: "90%", borderRadius: "8", border: "1px solid #d0cfeb", outline: "none", padding: "4px 8px", fontSize: "22px" }} />
+    <div style={{ fontSize: "22px", width: "100%", backgroundSize: "200%", minHeight: "100vh" }}>
+      <div style={{ width: "100%", display: "block", padding: "20px 0px", background: "rgb(95 36 19)", boxShadow: "4px 5px 6px #260a05" }}>
+        <div style={{ display: "inline-block", width: "75%", paddingLeft: "20px" }}>
+          <input placeholder="Search workers" value={key} onChange={(e) => { setKey(e.target.value); search(e.target.value)}} style={{ borderRadius: "6px", verticalAlign: "bottom", height: "42px", display: "block", margin: "auto", width: "90%", border: "1px solid #d0cfeb", outline: "none", padding: "4px 8px", fontSize: "22px" }} />
+        </div>
+        <div style={{ display: "inline-block", width: "23%", padding: "10px", fontSize: "30px", fontWeight: "bold" }}>
+          Ksale
         </div>
       </div>
 
       {
-        located == false && <div style={{ display: "block", borderRadius: "8px", padding: "12px", background: "white", margin: "12px" }}>
+        located == false && <div style={{ display: "block", borderRadius: "8px", padding: "12px", background: "#501b22", margin: "12px" }}>
           <div style={{ width: "100%", textAlign: "center", marginBottom: "12px" }}>
             We need current location to search nearby workers
           </div>
-          <LocateButton className="rounded-8" setLocating={setLocating} onError={(message) => setLocError(message || "Could not locate. Allow access to location.")} onOk={() => setLocated(true)} style={{ textAlign: "center", width: "250px", display: "block", margin: "auto", padding: "8px", background: locating ? "grey" : "green" }}>
+          <LocateButton className="btn" setLocating={setLocating} onError={(message) => setLocError(message || "Could not locate. Allow access to location.")} onOk={() => setLocated(true)}>
             {
               locating && "Locating" || (localStorage.getItem("latitude") ? "Update Location" : "Locate Me")
             }
@@ -74,13 +78,13 @@ const Home = ({ located, setLocated }) => {
       <div style={{ display: "block", width: "100%", padding: "12px" }}>
         {
           users.map((user) => (
-            <div style={{ position: "relative", display: "block", width: "100%", borderRadius: "8px", marginBottom: "12px", padding: "8px", backgroundImage: "linear-gradient(#fafafa, #e8eaf5, #fbfbfb)" }}>
+            <div style={{ position: "relative", display: "block", width: "100%", borderRadius: "8px", marginBottom: "12px", padding: "8px", background: "#62362a", boxShadow: "4px 5px 6px #260a05" }}>
               <div style={{ float: "left", position: "relative", display: "inline-block", width: "70px", height: "70px", padding: "10px" }}>
-                <div style={{ padding: "3px 0px 0px 16px", fontSize: "28px", height: "100%", width: "100%", borderRadius: "50%", background: "#7d74b6", color: "white" }}>
+                <div style={{ padding: "3px 0px 0px 16px", fontWeight: "bold", fontSize: "28px", height: "100%", width: "100%", borderRadius: "50%", background: "#000", color: "white" }}>
                   {user.name[0].toUpperCase()}
                 </div>
               </div>
-              <div style={{ display: "inline-block", width: "70%", float: "left" }}>
+              <div style={{ display: "inline-block", width: "70%", float: "left", color: "white" }}>
                 <div style={{ display: "block", width: "100%" }}>
                   {user.name}
                 </div>
@@ -93,7 +97,7 @@ const Home = ({ located, setLocated }) => {
                           await search(tag);
                         }
                       }}
-                      style={{ fontSize: "18px", display: "inline-block", float: "left", padding: "3px 8px", margin: "3px 8px 0px 0px", border: "1px solid #cfcfe9", background: "white", borderRadius: "4px" }}
+                      style={{ fontSize: "18px", display: "inline-block", float: "left", paddingRight: "8px", margin: "3px 8px 0px 0px", borderRadius: "4px" }}
                     >
                       {tag}
                     </div>
@@ -116,22 +120,22 @@ const Home = ({ located, setLocated }) => {
               user.Unset();
               user.setOnetimeMessage({ text: "Log out successfull.", type: "success", timeout: 3000 })
             }}
-            className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}
+            className="btn"
           >
             Log Out
           </div>
-          <Link to="profile" className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>
+          <Link to="profile" className="btn" >
             Account
           </Link>
         </> || <>
           <Link to="/join" style={{ textDecoration: "none" }}>
-            <div className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>
+            <div className="btn" >
               Join to get Work +
             </div>
             <div style={{ clear: "both" }} />
           </Link>
           <Link to="/login" style={{ textDecoration: "none" }}>
-            <div className="clickable rounded-8" style={{ textDecoration: "none", margin: "12px 12px", display: "block", background: "green", color: "white", padding: "8px 8px", textAlign: "center" }}>
+            <div className="btn" >
               Login
             </div>
             <div style={{ clear: "both" }} />

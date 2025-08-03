@@ -7,10 +7,10 @@ import { UserContext } from "./App";
 
 export const Nav = () => {
   return(
-    <div style={{ display: "block", background: "white", padding: "6px" }}>
+    <div style={{ display: "block", padding: "6px" }}>
       <Link style={{ textDecoration: "none" }} to="/">
-        <div className="clickable rounded-4" style={{ float: "right", textDecoration: "none", padding: "8px", color: "black" }}>
-          Home
+        <div style={{ float: "right", textDecoration: "none", padding: "8px", color: "white", fontSize: "30px", fontWeight: "bold" }}>
+          Ksale
         </div>
       </Link>
       <div style={{ clear: "both" }} />
@@ -53,8 +53,10 @@ export const Login = () => {
   }
 
   return(
-    <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", height: "100vh" }}>
-      <Nav />
+    <div style={{ fontSize: "22px", width: "100%", backgroundSize: "200%", height: "100vh" }}>
+      <div style={{ width: "100%", display: "block", background: "rgb(95 36 19)", boxShadow: "4px 5px 6px #260a05" }}>
+        <Nav />
+      </div>
       {
         loged && <Navigate to="/" />
       }
@@ -85,12 +87,12 @@ export const Login = () => {
           inputWidth="45%"
         />
         <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
-            <button
+            <div
               onClick={getotp}
-              style={{ height: "50px", border: "none", fontSize: "23px", width: "100%", borderRadius: "12px", background: "green", color: "white", padding: "4px 8px" }}
+              className="btn"
             >
               Get OTP
-            </button>
+            </div>
           </div>
       </div>
 
@@ -104,12 +106,12 @@ export const Login = () => {
           inputWidth="60%"
         />
         <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
-            <button
+            <div
               onClick={login}
-              style={{ height: "50px", border: "none", fontSize: "23px", width: "100%", borderRadius: "12px", background: "green", color: "white", padding: "4px 8px" }}
+              className="btn"
             >
               Login
-            </button>
+            </div>
           </div>
       </div>
     </div>
@@ -178,12 +180,14 @@ const Join = () => {
   }
 
   return(
-    <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", height: "100vh" }}>
+    <div style={{ fontSize: "22px", width: "100%", backgroundSize: "200%", height: "100vh" }}>
       {
         created && <Navigate to="/" />
       }
-      <Nav />
-      <div style={{ width: "100%", display: "block", padding: "20px 0px", borderBottom: "1px solid blue", padding: "12px" }}>
+      <div style={{ width: "100%", display: "block", background: "rgb(95 36 19)", boxShadow: "4px 5px 6px #260a05" }}>
+        <Nav />
+      </div>
+      <div style={{ width: "100%", display: "block", borderBottom: "1px solid blue", padding: "12px" }}>
         <div style={{ textAlign: "center", fontSize: "25px", display: "block", width: "80%", margin: "auto" }}>
           Welcome, Fill your work details
         </div>
@@ -270,12 +274,12 @@ const Join = () => {
         {
           name && phone && selectedJobs.length > 0 &&
           <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
-            <button
+            <div
               onClick={createAcc}
-              style={{ height: "50px", border: "none", fontSize: "23px", width: "100%", borderRadius: "12px", background: "green", color: "white", padding: "4px 8px", marginTop: "20px" }}
+              className="btn"
             >
               Create Account
-            </button>
+            </div>
           </div>
         }
       </div>

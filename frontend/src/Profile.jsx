@@ -71,8 +71,10 @@ const Profile = () => {
   }, [updated])
 
   return(
-    <div style={{ fontSize: "22px", width: "100%", backgroundImage: "radial-gradient(#dcebdc, #cfcfeb, #e4bed7)", backgroundSize: "200%", height: "100vh" }}>
-      <Nav />
+    <div style={{ fontSize: "22px", width: "100%", backgroundSize: "200%", height: "100vh" }}>
+      <div style={{ width: "100%", display: "block", background: "rgb(95 36 19)", boxShadow: "4px 5px 6px #260a05" }}>
+        <Nav />
+      </div>
       <div style={{ width: "100%", display: "block", padding: "20px 0px", borderBottom: "1px solid blue", padding: "12px" }}>
         <div style={{ textAlign: "center", fontSize: "25px", display: "block", width: "80%", margin: "auto" }}>
           Edit your work details
@@ -121,7 +123,7 @@ const Profile = () => {
           inputWidth="60%"
         />
 
-        <div style={{ width: "100%", display: "block" }}>
+        <div style={{ width: "100%", display: "block", marginTop: "20px" }}>
           {
             (lodash.uniqBy([...selectedJobs, ...jobs], (j) => j.id)).filter((j) => true).map((job) => (
               <div
@@ -133,7 +135,7 @@ const Profile = () => {
                     setSelectedJobs((jobs) => jobs.filter((j) => j.id != job.id))
                   }
                 }}
-                style={{ display: "block", textAlign: "center", margin: "8px auto", width: "90%", borderRadius: "4px", padding: "8px 18px", background: (selectedJobs.find(selected => selected.id == job.id) ? "blue" : "green"), color: "white" }}>
+                style={{ borderBottom: "1px solid black", display: "block", textAlign: "center", margin: "0px auto", width: "90%", borderRadius: "0px", padding: "4px 18px", background: (selectedJobs.find(selected => selected.id == job.id) ? "blue" : "green"), color: "white" }}>
                 {job.name} ({job.tags})
               </div>
             ))
@@ -142,12 +144,12 @@ const Profile = () => {
         {
           name && selectedJobs.length > 0 &&
           <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
-            <button
+            <div
               onClick={updateAcc}
-              style={{ height: "50px", border: "none", fontSize: "23px", width: "100%", borderRadius: "12px", background: "green", color: "white", padding: "4px 8px", marginTop: "20px" }}
+              className="btn"
             >
               Update
-            </button>
+            </div>
           </div>
         }
       </div>
