@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .clickable:hover {
   cursor: pointer;
 }
@@ -24,7 +26,7 @@ input.general {
 }
 
 body {
-  background: #340e07;
+  background: white;
   color: white;
 }
 

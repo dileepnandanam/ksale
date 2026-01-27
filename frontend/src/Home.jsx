@@ -5,8 +5,28 @@ import phone from "./assets/phone.png";
 import { UserContext } from "./App";
 import LocateButton from "./LocateButton";
 import { debounce } from "lodash";
+import "./assets/styles/base.css";
 
-const Home = ({ located, setLocated }) => {
+import { btnStyle, textRegular } from "./tailcss";
+
+const Home = (props) => {
+  return(
+    <div style={{ fontSize: "22px", width: "100%", minHeight: "100vh" }} className="inline text-black">
+      <div class="main bg-blue-100 h-full">
+        <Main {...props} />
+      </div>
+      <div class="ad bg-green-100 h-full">
+        <Ad {...props} />
+      </div>
+    </div>
+  )
+}
+
+const Ad = (props) => {
+  return("")
+}
+
+const Main = ({ located, setLocated }) => {
   const user = useContext(UserContext);
 
   const [locError, setLocError] = useState("");
@@ -49,22 +69,22 @@ const Home = ({ located, setLocated }) => {
   const [key, setKey] = useState("");
 
   return(
-    <div style={{ fontSize: "22px", width: "100%", backgroundSize: "200%", minHeight: "100vh" }}>
-      <div style={{ width: "100%", display: "block", padding: "20px 0px", background: "rgb(95 36 19)", boxShadow: "4px 5px 6px #260a05" }}>
-        <div style={{ display: "inline-block", width: "75%", paddingLeft: "20px" }}>
-          <input placeholder="Search workers" value={key} onChange={(e) => { setKey(e.target.value); search(e.target.value)}} style={{ borderRadius: "6px", verticalAlign: "bottom", height: "42px", display: "block", margin: "auto", width: "90%", border: "1px solid #d0cfeb", outline: "none", padding: "4px 8px", fontSize: "22px" }} />
-        </div>
-        <div style={{ display: "inline-block", width: "23%", padding: "10px", fontSize: "30px", fontWeight: "bold" }}>
-          Ksale
-        </div>
+    <div class="max-w-md mx-auto w-full px-4">
+      <div class="max-w-md mx-auto w-full">
+        <input
+          placeholder="Search workers" value={key} onChange={(e) => { setKey(e.target.value); search(e.target.value)}}
+          type="search"
+          placeholder="Search workers"
+          style={{ fontSize: "20px" }}
+          className="w-full rounded-lg text-2xl px-8 py-6 mt-6 outline-none focus:outline-none"
+        />
       </div>
-
       {
-        located == false && <div style={{ display: "block", borderRadius: "8px", padding: "12px", background: "#501b22", margin: "12px" }}>
-          <div style={{ width: "100%", textAlign: "center", marginBottom: "12px" }}>
+        located == false && <div className="max-w-md mx-auto">
+          <div className={textRegular}>
             We need current location to search nearby workers
           </div>
-          <LocateButton className="btn" setLocating={setLocating} onError={(message) => setLocError(message || "Could not locate. Allow access to location.")} onOk={() => setLocated(true)}>
+          <LocateButton className={`clickable ${btnStyle}`} setLocating={setLocating} onError={(message) => setLocError(message || "Could not locate. Allow access to location.")} onOk={() => setLocated(true)}>
             {
               locating && "Locating" || (localStorage.getItem("latitude") ? "Update Location" : "Locate Me")
             }
@@ -113,35 +133,39 @@ const Home = ({ located, setLocated }) => {
           ))
         }
       </div>
-      {
-        (user && user.Current()?.ID) && <>
-          <div
-            onClick={() => {
-              user.Unset();
-              user.setOnetimeMessage({ text: "Log out successfull.", type: "success", timeout: 3000 })
-            }}
-            className="btn"
-          >
-            Log Out
-          </div>
-          <Link to="profile" className="btn" >
-            Account
-          </Link>
-        </> || <>
-          <Link to="/join" style={{ textDecoration: "none" }}>
-            <div className="btn" >
-              Join to get Work +
+      <div class="max-w-md mx-auto">
+        {
+          (user && user.Current()?.ID) && <>
+            <div
+              onClick={() => {
+                user.Unset();
+                user.setOnetimeMessage({ text: "Log out successfull.", type: "success", timeout: 3000 })
+              }}
+              className={`clickable ${btnStyle}`}
+            >
+              Log Out
             </div>
-            <div style={{ clear: "both" }} />
-          </Link>
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            <div className="btn" >
-              Login
-            </div>
-            <div style={{ clear: "both" }} />
-          </Link>
-        </>
-      }
+            <Link to="profile" style={{ textDecoration: "none" }}>
+              <div className={btnStyle}>
+                Account
+              </div>
+            </Link>
+          </> || <>
+            <Link to="/join" style={{ textDecoration: "none" }}>
+              <div className={btnStyle} >
+                Join to get Work +
+              </div>
+              <div style={{ clear: "both" }} />
+            </Link>
+            <Link to="/login" style={{ textDecoration: "none" }}>
+              <div className={btnStyle} >
+                Login
+              </div>
+              <div style={{ clear: "both" }} />
+            </Link>
+          </>
+        }
+      </div>
     </div>
   )
 }

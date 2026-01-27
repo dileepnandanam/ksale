@@ -1,0 +1,21 @@
+@media (max-width: 800px) {
+  .ad {
+    display: none;
+  }
+  .main {
+    display: inline-block;
+    width: 100%;
+  }
+}
+@media (min-width: 801px) {
+  .ad {
+    display: inline-block;
+    width: 60%;
+    float: right;
+  }
+  .main {
+    display: inline-block;
+    width: 40%;
+    float: left;
+  }
+}

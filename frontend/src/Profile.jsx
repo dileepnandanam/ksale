@@ -7,6 +7,7 @@ import lodash from "lodash";
 import { UserContext } from "./App";
 import { Nav } from "./Join";
 import { useNavigate } from "react-router";
+import { btnStyle, textRegular } from "./tailcss";
 
 const Profile = () => {
   const user = useContext(UserContext);
@@ -71,14 +72,12 @@ const Profile = () => {
   }, [updated])
 
   return(
-    <div style={{ fontSize: "22px", width: "100%", backgroundSize: "200%", height: "100vh" }}>
-      <div style={{ width: "100%", display: "block", background: "rgb(95 36 19)", boxShadow: "4px 5px 6px #260a05" }}>
+    <div className="text-xl text-black inline w-full bg-blue-100">
+      <div className="w-full bg-red-900">
         <Nav />
       </div>
-      <div style={{ width: "100%", display: "block", padding: "20px 0px", borderBottom: "1px solid blue", padding: "12px" }}>
-        <div style={{ textAlign: "center", fontSize: "25px", display: "block", width: "80%", margin: "auto" }}>
-          Edit your work details
-        </div>
+      <div className="py-6 text-3xl text-center w-full">
+        Edit your work details
       </div>
 
       <div style={{ display: (errors ? "block" : "none"), width: "100%", padding: "12px", color: "red", background: "lightblue" }}>
@@ -135,7 +134,8 @@ const Profile = () => {
                     setSelectedJobs((jobs) => jobs.filter((j) => j.id != job.id))
                   }
                 }}
-                style={{ borderBottom: "1px solid black", display: "block", textAlign: "center", margin: "0px auto", width: "90%", borderRadius: "0px", padding: "4px 18px", background: (selectedJobs.find(selected => selected.id == job.id) ? "blue" : "green"), color: "white" }}>
+                className={`clickable text-black rounded-lg py-2 ${selectedJobs.find(selected => selected.id == job.id) ? "bg-green-500" : "bg-green-100"}`}
+                style={{ display: "block", textAlign: "center", margin: "0px auto", width: "90%" }}>
                 {job.name} ({job.tags})
               </div>
             ))
@@ -146,7 +146,7 @@ const Profile = () => {
           <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
             <div
               onClick={updateAcc}
-              className="btn"
+              className={`clickable ${btnStyle}`}
             >
               Update
             </div>

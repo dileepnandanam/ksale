@@ -4,6 +4,7 @@ import AdminApi from "./AdminApi";
 import Api from "./Api";
 import lodash from "lodash";
 import { UserContext } from "./App";
+import { btnStyle, textRegular } from "./tailcss";
 
 export const Nav = () => {
   return(
@@ -89,7 +90,7 @@ export const Login = () => {
         <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
             <div
               onClick={getotp}
-              className="btn"
+              className={`clickable ${btnStyle}`}
             >
               Get OTP
             </div>
@@ -108,7 +109,7 @@ export const Login = () => {
         <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
             <div
               onClick={login}
-              className="btn"
+              className={`clickable ${btnStyle}`}
             >
               Login
             </div>
@@ -253,11 +254,11 @@ const Join = () => {
           inputWidth="60%"
         />
 
-        <div style={{ width: "100%", display: "block" }}>
+        <div className="mt-4" style={{ width: "100%", display: "block" }}>
           {
             (lodash.uniqBy([...selectedJobs, ...jobs], (j) => j.id)).filter((j) => true).map((job) => (
               <div
-                className="clickable"
+                className={`clickable text-black rounded-lg py-2 ${selectedJobs.find(selected => selected.id == job.id) ? "bg-green-500" : "bg-green-100"}`}
                 onClick={() => {
                   if (!selectedJobs.find(selected => selected.id == job.id)) {
                     setSelectedJobs((jobs) => [job, ...jobs])
@@ -265,7 +266,7 @@ const Join = () => {
                     setSelectedJobs((jobs) => jobs.filter((j) => j.id != job.id))
                   }
                 }}
-                style={{ display: "block", textAlign: "center", margin: "8px auto", width: "90%", borderRadius: "4px", padding: "8px 18px", background: (selectedJobs.find(selected => selected.id == job.id) ? "blue" : "green"), color: "white" }}>
+                style={{ display: "block", textAlign: "center", margin: "0px auto", width: "90%" }}>
                 {job.name} ({job.tags})
               </div>
             ))
@@ -276,7 +277,7 @@ const Join = () => {
           <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
             <div
               onClick={createAcc}
-              className="btn"
+              className={`clickable ${btnStyle}`}
             >
               Create Account
             </div>
@@ -291,7 +292,7 @@ export default Join;
 
 export const Input = (props) => {
   return(
-    <div style={{ display: "inline-block", width: "100%", margin: "4px 0px" }}>
+    <div style={{ color: "black", display: "inline-block", width: "100%", margin: "4px 0px" }}>
       {
         props.label &&
         <div style={{ fontSize: "22px", display: "inline-block", width: props.labelWidth, padding: "8px", verticalAlign: "bottom" }}>
@@ -308,8 +309,8 @@ export const Input = (props) => {
         <input
           placeholder={props.placeholder}
           disabled={props.disabled ? "disabled" : ""}
-          style={{ border: (props.isvalid ? "1px solid black" : "2px solid red"), fontSize: "22px", width: "100%" }}
-          className="general"
+          style={{ fontSize: "22px" }}
+          className={`rounded-lg px-4 py-5 w-full outline-1 outline-black-100 ${props.isvalid ? "" : "outline-2 outline-red-500 focus:outline-2 focus:outline-red-500"}`}
           onChange={(e) => {
             if (props.onChange) {
               props.onChange(e)
