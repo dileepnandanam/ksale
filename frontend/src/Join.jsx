@@ -8,7 +8,7 @@ import { btnStyle, textRegular } from "./tailcss";
 
 export const Nav = () => {
   return(
-    <div style={{ display: "block", padding: "6px" }}>
+    <div className="bg-green-800" style={{ display: "block", padding: "6px" }}>
       <Link style={{ textDecoration: "none" }} to="/">
         <div style={{ float: "right", textDecoration: "none", padding: "8px", color: "white", fontSize: "30px", fontWeight: "bold" }}>
           Ksale
@@ -55,9 +55,7 @@ export const Login = () => {
 
   return(
     <div style={{ fontSize: "22px", width: "100%", backgroundSize: "200%", height: "100vh" }}>
-      <div style={{ width: "100%", display: "block", background: "rgb(95 36 19)", boxShadow: "4px 5px 6px #260a05" }}>
-        <Nav />
-      </div>
+      <Nav />
       {
         loged && <Navigate to="/" />
       }
@@ -185,9 +183,7 @@ const Join = () => {
       {
         created && <Navigate to="/" />
       }
-      <div style={{ width: "100%", display: "block", background: "rgb(95 36 19)", boxShadow: "4px 5px 6px #260a05" }}>
-        <Nav />
-      </div>
+      <Nav />
       <div style={{ width: "100%", display: "block", borderBottom: "1px solid blue", padding: "12px" }}>
         <div style={{ textAlign: "center", fontSize: "25px", display: "block", width: "80%", margin: "auto" }}>
           Welcome, Fill your work details

@@ -6,16 +6,19 @@ import { UserContext } from "./App";
 import LocateButton from "./LocateButton";
 import { debounce } from "lodash";
 import "./assets/styles/base.css";
-
-import { btnStyle, textRegular } from "./tailcss";
+import bg from "./assets/bg.jpg"
+import bg2 from "./assets/bg2.jpeg"
+import { btnStyle, textRegular, textWhite } from "./tailcss";
 
 const Home = (props) => {
   return(
     <div style={{ fontSize: "22px", width: "100%", minHeight: "100vh" }} className="inline text-black">
-      <div class="main bg-blue-100 h-full">
-        <Main {...props} />
+      <div className="main bg-blue-100 h-full" style={{ backgroundImage: `url(${bg2})`, backgroundSize: "cover" }}>
+        <div className="w-full h-full" style={{ backgroundImage: "linear-gradient(180deg, black, transparent)", backdropFilter: "blur(2px)", filter: "none" }}>
+          <Main {...props} />
+        </div>
       </div>
-      <div class="ad bg-green-100 h-full">
+      <div class="ad bg-green-100 h-full" style={{ backgroundImage: `url(${bg})`, backgroundSize: "cover" }}>
         <Ad {...props} />
       </div>
     </div>
@@ -81,7 +84,7 @@ const Main = ({ located, setLocated }) => {
       </div>
       {
         located == false && <div className="max-w-md mx-auto">
-          <div className={textRegular}>
+          <div className={textWhite}>
             We need current location to search nearby workers
           </div>
           <LocateButton className={`clickable ${btnStyle}`} setLocating={setLocating} onError={(message) => setLocError(message || "Could not locate. Allow access to location.")} onOk={() => setLocated(true)}>
@@ -98,13 +101,13 @@ const Main = ({ located, setLocated }) => {
       <div style={{ display: "block", width: "100%", padding: "12px" }}>
         {
           users.map((user) => (
-            <div style={{ position: "relative", display: "block", width: "100%", borderRadius: "8px", marginBottom: "12px", padding: "8px", background: "#62362a", boxShadow: "4px 5px 6px #260a05" }}>
+            <div className="block relative block w-full rounded-8 mb-2 p-2 text-black" style={{ background: "#fff7aeb8" }} >
               <div style={{ float: "left", position: "relative", display: "inline-block", width: "70px", height: "70px", padding: "10px" }}>
                 <div style={{ padding: "3px 0px 0px 16px", fontWeight: "bold", fontSize: "28px", height: "100%", width: "100%", borderRadius: "50%", background: "#000", color: "white" }}>
                   {user.name[0].toUpperCase()}
                 </div>
               </div>
-              <div style={{ display: "inline-block", width: "70%", float: "left", color: "white" }}>
+              <div style={{ display: "inline-block", width: "70%", float: "left" }}>
                 <div style={{ display: "block", width: "100%" }}>
                   {user.name}
                 </div>
@@ -125,7 +128,7 @@ const Main = ({ located, setLocated }) => {
                   <div style={{ clear: "both" }} />
                 </div>
               </div>
-              <a href={"tel:" + user.phone} style={{ position: "absolute", right: "0", top: "6px", fontSize: "30px", textDecoration: "none", display: "inline-block", width: "50px", height: "50px", padding: "14px 0px 14px 18px", float: "right" }}>
+              <a href={"tel:" + user.phone} style={{ position: "absolute", right: "0", top: "10px", fontSize: "30px", textDecoration: "none", display: "inline-block", width: "80px", height: "80px", padding: "14px 0px 14px 18px", float: "right" }}>
                 <img src={phone} style={{ width: "60%" }} />
               </a>
               <div style={{ clear: "both" }} />
