@@ -8,6 +8,7 @@ import { UserContext } from "./App";
 import { Nav } from "./Join";
 import { useNavigate } from "react-router";
 import { btnStyle, textRegular } from "./tailcss";
+import { appBg } from "./tailcss";
 
 const Profile = () => {
   const user = useContext(UserContext);
@@ -72,7 +73,7 @@ const Profile = () => {
   }, [updated])
 
   return(
-    <div className="text-xl text-black inline w-full bg-blue-100">
+    <div className="text-xl text-black inline w-full bg-blue-100" style={{ ...appBg }}>
       <div className="w-full bg-red-900">
         <Nav />
       </div>

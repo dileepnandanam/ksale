@@ -5,6 +5,7 @@ import Api from "./Api";
 import lodash from "lodash";
 import { UserContext } from "./App";
 import { btnStyle, textRegular } from "./tailcss";
+import { appBg, appBgOverlay } from "./tailcss";
 
 export const Nav = () => {
   return(
@@ -15,6 +16,16 @@ export const Nav = () => {
         </div>
       </Link>
       <div style={{ clear: "both" }} />
+    </div>
+  )
+}
+
+export const Page = (props) => {
+  return(
+    <div className="block text-xl text-white block w-full" style={{ display: "block", height: "100vh", ...appBg }}>
+      <div className="block text-xl text-white inline w-full" style={{ display: "block", height: "100vh", backdropFilter: "blur(2px)", ...appBgOverlay }}>
+        {props.children}
+      </div>
     </div>
   )
 }
@@ -54,7 +65,7 @@ export const Login = () => {
   }
 
   return(
-    <div style={{ fontSize: "22px", width: "100%", backgroundSize: "200%", height: "100vh" }}>
+    <Page>
       <Nav />
       {
         loged && <Navigate to="/" />
@@ -113,7 +124,7 @@ export const Login = () => {
             </div>
           </div>
       </div>
-    </div>
+    </Page>
   )
 
 }
@@ -179,7 +190,7 @@ const Join = () => {
   }
 
   return(
-    <div style={{ fontSize: "22px", width: "100%", backgroundSize: "200%", height: "100vh" }}>
+    <Page>
       {
         created && <Navigate to="/" />
       }
@@ -280,7 +291,7 @@ const Join = () => {
           </div>
         }
       </div>
-    </div>
+    </Page>
   )
 }
 
@@ -288,7 +299,7 @@ export default Join;
 
 export const Input = (props) => {
   return(
-    <div style={{ color: "black", display: "inline-block", width: "100%", margin: "4px 0px" }}>
+    <div style={{ color: props.labelColor || "white", display: "inline-block", width: "100%", margin: "4px 0px" }}>
       {
         props.label &&
         <div style={{ fontSize: "22px", display: "inline-block", width: props.labelWidth, padding: "8px", verticalAlign: "bottom" }}>
