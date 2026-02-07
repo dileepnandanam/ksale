@@ -91,6 +91,10 @@ func UserGetOtp(c echo.Context) error {
   var existingUser models.User
   c.Bind(params)
 
+  if params.Phone == 0 {
+    return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "phone_not_found"})
+  }
+
   result := db.Where(&models.User{CountryCode: params.CountryCode, Phone: params.Phone}).First(&existingUser)
 
   if result.Error == nil {

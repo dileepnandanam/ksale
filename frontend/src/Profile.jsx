@@ -9,6 +9,7 @@ import { Nav } from "./Join";
 import { useNavigate } from "react-router";
 import { btnStyle, textRegular } from "./tailcss";
 import { appBg } from "./tailcss";
+import { Page } from "./Join";
 
 const Profile = () => {
   const user = useContext(UserContext);
@@ -73,7 +74,7 @@ const Profile = () => {
   }, [updated])
 
   return(
-    <div className="text-xl text-black inline w-full bg-blue-100" style={{ ...appBg }}>
+    <Page>
       <div className="w-full bg-red-900">
         <Nav />
       </div>
@@ -125,7 +126,7 @@ const Profile = () => {
 
         <div style={{ width: "100%", display: "block", marginTop: "20px" }}>
           {
-            (lodash.uniqBy([...selectedJobs, ...jobs], (j) => j.id)).filter((j) => true).map((job) => (
+            (lodash.uniqBy([...selectedJobs, ...jobs], (j) => j.id)).sort((a, b) => a.id - b.id).map((job) => (
               <div
                 className="clickable"
                 onClick={() => {
@@ -135,8 +136,8 @@ const Profile = () => {
                     setSelectedJobs((jobs) => jobs.filter((j) => j.id != job.id))
                   }
                 }}
-                className={`clickable text-black rounded-lg py-2 ${selectedJobs.find(selected => selected.id == job.id) ? "bg-green-500" : "bg-green-100"}`}
-                style={{ display: "block", textAlign: "center", margin: "0px auto", width: "90%" }}>
+                className={`clickable mb-2 text-black rounded-lg py-2 ${selectedJobs.find(selected => selected.id == job.id) ? "bg-green-500" : "bg-green-100"}`}
+                style={{ display: "block", textAlign: "center", marginLeft: "auto", marginRight: "auto", width: "90%" }}>
                 {job.name} ({job.tags})
               </div>
             ))
@@ -154,7 +155,7 @@ const Profile = () => {
           </div>
         }
       </div>
-    </div>
+    </Page>
   )
 }
 

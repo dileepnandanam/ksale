@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import AdminApi from "./AdminApi";
 import JobTagManage from "./JobTagManage";
-import "./Tagmanager.css";
+import {
+  btnStyle,
+  textRegular,
+  textWhite,
+  appBg,
+  appBgOverlay,
+} from "./tailcss";
 
 const JobManage = () => {
   const [jobs, setJobs] = useState([])
@@ -17,7 +23,7 @@ const JobManage = () => {
 
   return(
     <div>
-      <h2 style={{ width: "100%", padding: "12px", border: "1px solid grey", marginBottom: "8px" }}>
+      <h2 className={textRegular} style={{ width: "100%", padding: "12px", border: "1px solid grey", marginBottom: "8px" }}>
         Ksale Jobs List ({jobs.length})
       </h2>
       <NewJob setJobs={setJobs} />
@@ -38,10 +44,10 @@ const Job = ({ job }) => {
   }
   return(
     <div style={{ width: "100%", padding: "12px", border: "1px solid grey", marginBottom: "8px" }}>
-      <div style={{ marginRight: "12px", display: "inline-block" }}>job name</div>
-      <input style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
-      {val.length > 0 && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >Save</button>}
-      <button style={{ marginRight: "12px", display: "inline-block" }} onClick={() => setManaging(!managing)} >manage tags</button>
+      <div className={textRegular} style={{ marginRight: "12px", display: "inline-block" }}>job name</div>
+      <input className="rounded-lg px-4 py-5 w-full outline-1 outline-black-100" style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
+      {val.length > 0 && <button className={btnStyle} style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >Save</button>}
+      <button className={btnStyle} style={{ marginRight: "12px", display: "inline-block" }} onClick={() => setManaging(!managing)} >manage tags</button>
       {managing && <JobTagManage job={job} />}
     </div>
   )
@@ -75,9 +81,9 @@ const NewJob = ({ setJobs }) => {
   }, [val])
   return(
     <div style={{ width: "100%", padding: "12px", border: "1px solid grey", marginBottom: "8px" }}>
-      <div style={{ marginRight: "12px", display: "inline-block" }}>new job name</div>
-      <input style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
-      {val.length > 0 && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >create</button>}
+      <div className={textRegular} style={{ marginRight: "12px", display: "inline-block" }}>new job name</div>
+      <input className="rounded-lg px-4 py-5 w-full outline-1 outline-black-100" style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
+      {val.length > 0 && <button className={btnStyle} style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >create</button>}
       {existing.length > 0 && 
         <>
           <h4>Similar jobs added</h4>

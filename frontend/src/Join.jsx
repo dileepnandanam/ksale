@@ -22,8 +22,8 @@ export const Nav = () => {
 
 export const Page = (props) => {
   return(
-    <div className="block text-xl text-white block w-full" style={{ display: "block", height: "100vh", ...appBg }}>
-      <div className="block text-xl text-white inline w-full" style={{ display: "block", height: "100vh", backdropFilter: "blur(2px)", ...appBgOverlay }}>
+    <div className="block text-xl text-white block w-full" style={{ display: "block", minHeight: "100vh", ...appBg }}>
+      <div className="block text-xl text-white inline w-full" style={{ display: "block", minHeight: "100vh", backdropFilter: "blur(2px)", ...appBgOverlay }}>
         {props.children}
       </div>
     </div>
@@ -76,7 +76,7 @@ export const Login = () => {
         </div>
       </div>
 
-      <div style={{ display: (errors ? "block" : "none"), width: "100%", padding: "12px", color: "red", background: "lightblue" }}>
+      <div className="bg-red-800 text-l p-2" style={{ display: (errors ? "block" : "none") }}>
         {
           errors && ({
             phone_not_found: "Phone number not registered!",
@@ -263,9 +263,9 @@ const Join = () => {
 
         <div className="mt-4" style={{ width: "100%", display: "block" }}>
           {
-            (lodash.uniqBy([...selectedJobs, ...jobs], (j) => j.id)).filter((j) => true).map((job) => (
+            (lodash.uniqBy([...selectedJobs, ...jobs], (j) => j.id)).sort((a, b) => a.id - b.id).map((job) => (
               <div
-                className={`clickable text-black rounded-lg py-2 ${selectedJobs.find(selected => selected.id == job.id) ? "bg-green-500" : "bg-green-100"}`}
+                className={`clickable mb-2 text-black rounded-lg py-2 ${selectedJobs.find(selected => selected.id == job.id) ? "bg-green-500" : "bg-green-100"}`}
                 onClick={() => {
                   if (!selectedJobs.find(selected => selected.id == job.id)) {
                     setSelectedJobs((jobs) => [job, ...jobs])
@@ -273,7 +273,7 @@ const Join = () => {
                     setSelectedJobs((jobs) => jobs.filter((j) => j.id != job.id))
                   }
                 }}
-                style={{ display: "block", textAlign: "center", margin: "0px auto", width: "90%" }}>
+                style={{ display: "block", textAlign: "center", marginLeft: "auto", marginRight: "auto", width: "90%" }}>
                 {job.name} ({job.tags})
               </div>
             ))

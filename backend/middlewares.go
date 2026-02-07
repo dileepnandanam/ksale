@@ -65,7 +65,7 @@ func CurrentAdminUserMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		var existingUser models.User
 		result := db.Where(&models.User{ID: uint(uID), BearerToken: token}).First(&existingUser)
 
-		if result.Error != nil || existingUser.ID == 0 || existingUser.ID != 1 {
+		if result.Error != nil || existingUser.ID == 0 || existingUser.Admin != true {
 			return c.JSON(http.StatusUnauthorized, map[string]string{
 				"message": "Missing User",
 				"error": "missing_user_for_token",

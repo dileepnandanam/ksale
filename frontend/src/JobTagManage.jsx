@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
 import AdminApi from "./AdminApi";
+import {
+  btnStyle,
+  textRegular,
+  textWhite,
+  appBg,
+  appBgOverlay,
+} from "./tailcss";
 
 const JobTagManage = ({ job }) => {
   const [tags, setJobTags] = useState([])
@@ -43,11 +50,11 @@ const JobTag = ({ tag }) => {
   return(
     <div style={{ width: "100%", padding: "12px", margin: "8px", display: "block" }}>
       <div style={{ marginRight: "12px", display: "inline-block" }}>tag name</div>
-      <input style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
-      {val.length > 0 && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >Save</button>}
+      <input className="rounded-lg px-4 py-5 w-full outline-1 outline-black-100" style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
+      {val.length > 0 && <button className={btnStyle} style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >Save</button>}
       {
-        isCorrect && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={async () => await correct(false)} >Correct</button> ||
-        <button style={{ marginRight: "12px", display: "inline-block" }} onClick={async () => await correct(true)} >Error</button>
+        isCorrect && <button className={btnStyle} style={{ marginRight: "12px", display: "inline-block" }} onClick={async () => await correct(false)} >Correct</button> ||
+        <button className={btnStyle} style={{ marginRight: "12px", display: "inline-block" }} onClick={async () => await correct(true)} >Error</button>
       }
     </div>
   )
@@ -63,8 +70,8 @@ const NewJobTag = ({ setJobTags, job }) => {
   return(
     <div style={{ width: "100%", padding: "12px", margin: "8px", display: "block" }}>
       <div style={{ marginRight: "12px", display: "inline-block" }}>new tag name</div>
-      <input style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
-      {val.length > 0 && <button style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >create</button>}
+      <input className="rounded-lg px-4 py-5 w-full outline-1 outline-black-100" style={{ marginRight: "12px", display: "inline-block" }} onChange={(e) => setVal(e.target.value)} value={val} />
+      {val.length > 0 && <button className={btnStyle} style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >create</button>}
     </div>
   )
 }
