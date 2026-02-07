@@ -228,10 +228,11 @@ func UserSearch(c echo.Context) error {
 	c.Bind(params)
 
 	type UserAndJob struct {
-    Name        string `json:"name"`
-    Phone       uint   `json:"phone"`
-    CountryCode string `json:"country_code"`
-    Tags        string `json:"tags"`
+    Name        string  `json:"name"`
+    Phone       uint    `json:"phone"`
+    CountryCode string  `json:"country_code"`
+    Tags        string  `json:"tags"`
+    Distance    float64 `json:"distance"`
   }
 
   var results []UserAndJob
@@ -240,10 +241,11 @@ func UserSearch(c echo.Context) error {
   	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "searched", "data": nil })
   }
 
-  order := "distance(users.lat, users.lng," + params.Lat + "," + params.Lng + ") ASC"
+  distanceQuery := "distance(users.lat, users.lng," + params.Lat + "," + params.Lng + ")"
+  order := distanceQuery + " ASC"
 
 	db.Model(&models.User{}).Select(
-    "users.name, users.phone, users.country_code, array_to_string(ARRAY_REMOVE(ARRAY_AGG(DISTINCT correct_tag.tag), NULL), ', ') as tags",
+    "users.name, users.phone, users.country_code, array_to_string(ARRAY_REMOVE(ARRAY_AGG(DISTINCT correct_tag.tag), NULL), ', ') as tags, " + distanceQuery + " AS distance" ,
   ).Joins(
     "inner join user_jobs on user_jobs.user_id = users.id",
   ).Joins(
