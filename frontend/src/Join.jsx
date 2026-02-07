@@ -317,7 +317,7 @@ export const Input = (props) => {
           placeholder={props.placeholder}
           disabled={props.disabled ? "disabled" : ""}
           style={{ fontSize: "22px" }}
-          className={`rounded-lg px-4 py-5 w-full outline-1 outline-black-100 ${props.isvalid ? "" : "outline-2 outline-red-500 focus:outline-2 focus:outline-red-500"}`}
+          className={`rounded-lg px-4 py-3 w-full outline-1 outline-black-100 ${props.isvalid ? "" : "outline-2 outline-red-500 focus:outline-2 focus:outline-red-500"}`}
           onChange={(e) => {
             if (props.onChange) {
               props.onChange(e)
