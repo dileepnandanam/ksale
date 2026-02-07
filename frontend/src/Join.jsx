@@ -197,7 +197,7 @@ const Join = () => {
       <Nav />
       <div style={{ width: "100%", display: "block", borderBottom: "1px solid blue", padding: "12px" }}>
         <div style={{ textAlign: "center", fontSize: "25px", display: "block", width: "80%", margin: "auto" }}>
-          Welcome, Fill your work details
+          Welcome, Join to get work nearby.
         </div>
       </div>
 

@@ -30,6 +30,8 @@ func BindRoutes(r *echo.Echo) {
   r.GET("/api/users/current", controllers.UserGet, CurrentUserMiddleware)
   r.GET("/api/users/:id", controllers.GetUser, CurrentUserMiddleware)
   r.PUT("/api/users/:id", controllers.UpdateUser, CurrentUserMiddleware)
-
+  r.File("/sitemap.xml", "frontend/sitemap.xml")
+  r.File("/robot.txt", "frontend/robot.txt")
   r.File("/*", "frontend/dist/index.html")
+
 }
