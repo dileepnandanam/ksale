@@ -262,7 +262,7 @@ func UserSearch(c echo.Context) error {
     "users.lat > 0 AND users.activated = ? AND (job_tags.tag ILIKE ? OR job_tags.tag ILIKE ?)", true, params.Key + "%", "% " + params.Key + "%",
   ).Order(
   	order,
-  ).Group("users.id, users.name, users.phone, users.country_code").Scan(&results)
+  ).Limit(30).Group("users.id, users.name, users.phone, users.country_code").Scan(&results)
 
   return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "searched", "data": results })
 }

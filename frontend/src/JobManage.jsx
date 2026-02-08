@@ -86,10 +86,10 @@ const NewJob = ({ setJobs }) => {
       {val.length > 0 && <button className={btnStyle} style={{ marginRight: "12px", display: "inline-block" }} onClick={save} >create</button>}
       {existing.length > 0 && 
         <>
-          <h4>Similar jobs added</h4>
+          <h4 className={textRegular}>Similar jobs added</h4>
           {
             existing.map((e, idx) => (
-              <div key={idx} style={{ display: "block" }}>
+              <div key={idx} className={textRegular} style={{ display: "block" }}>
                 {e.tag} ({e.name})
               </div>
             ))

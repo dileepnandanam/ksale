@@ -265,22 +265,24 @@ const Join = () => {
           {
             (lodash.uniqBy([...selectedJobs, ...jobs], (j) => j.id)).sort((a, b) => a.id - b.id).map((job) => (
               <div
-                className={`clickable mb-2 text-black rounded-lg py-2 ${selectedJobs.find(selected => selected.id == job.id) ? "bg-green-500" : "bg-green-100"}`}
+                className={`clickable mb-2 text-black text-l rounded-lg py-3 ${selectedJobs.find(selected => selected.id == job.id) ? "bg-green-500" : "bg-green-100"}`}
                 onClick={() => {
                   if (!selectedJobs.find(selected => selected.id == job.id)) {
-                    setSelectedJobs((jobs) => [job, ...jobs])
+                    setSelectedJobs((jobs) => [{...job, selected: true}, ...jobs])
                   } else {
                     setSelectedJobs((jobs) => jobs.filter((j) => j.id != job.id))
                   }
                 }}
                 style={{ display: "block", textAlign: "center", marginLeft: "auto", marginRight: "auto", width: "90%" }}>
-                {job.name} ({job.tags})
+                {
+                  job.tags && job.name != job.tags && <>{job.name} ({job.tags})</> || job.name
+                } {job.selected && "✔"}
               </div>
             ))
           }
         </div>
         {
-          name && phone && selectedJobs.length > 0 &&
+          name && phone &&
           <div style={{ boxSizing: "border-box", margin: "12px 12px", display: "block" }}>
             <div
               onClick={createAcc}
