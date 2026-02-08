@@ -9,6 +9,7 @@ import "./assets/styles/base.css";
 import bg from "./assets/bg.jpg"
 import bg2 from "./assets/bg2.jpeg"
 import { btnStyle, textRegular, textWhite } from "./tailcss";
+import Map from "./Map";
 
 const Home = (props) => {
   return(
@@ -120,6 +121,15 @@ const Main = ({ located, setLocated }) => {
           ))
         }
       </div>
+
+      {
+        located && <Map targets={users.map((u) => ({
+          identity: u.name,
+          lat: u.lat,
+          lng: u.lng,
+        }))} />
+      }
+
       <div class="max-w-md mx-auto">
         {
           (user && user.Current()?.ID) && <>
@@ -168,7 +178,7 @@ const UserContact = ({ user }) => {
     <div className="block relative block w-full rounded-8 mb-2 text-black" style={{ display: "flex", background: "#fff7aeb8", paddingLeft: "0px" }} >
       <div className="float-left p-3 bg-blue-100" style={{ flex: "1", fontSize: "16px", borderRadius: "8px 0px 0px 8px" }}>
         <div className="block">
-          {user.distance.toFixed(1)}
+          {(user.distance * 1.609).toFixed(1)}
         </div>
         <div className="block">
           Km

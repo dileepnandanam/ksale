@@ -237,6 +237,8 @@ func UserSearch(c echo.Context) error {
     CountryCode string  `json:"country_code"`
     Tags        string  `json:"tags"`
     Distance    float64 `json:"distance"`
+    Lat    float64 `json:"lat"`
+    Lng    float64 `json:"lng"`
   }
 
   var results []UserAndJob
@@ -249,7 +251,7 @@ func UserSearch(c echo.Context) error {
   order := distanceQuery + " ASC"
 
 	db.Model(&models.User{}).Select(
-    "users.name, users.phone, users.country_code, array_to_string(ARRAY_REMOVE(ARRAY_AGG(DISTINCT correct_tag.tag), NULL), ', ') as tags, " + distanceQuery + " AS distance" ,
+    "users.lat, users.lng, users.name, users.phone, users.country_code, array_to_string(ARRAY_REMOVE(ARRAY_AGG(DISTINCT correct_tag.tag), NULL), ', ') as tags, " + distanceQuery + " AS distance" ,
   ).Joins(
     "inner join user_jobs on user_jobs.user_id = users.id",
   ).Joins(
