@@ -73,7 +73,7 @@ const Render = ({ items }) => {
     const y = (map.origin.lat - item.lat) * (mapImageX/mapTotalX);
     const x = (item.lng - map.origin.lng) * (mapImageX/mapTotalX);
     return({
-      top: `${y}px`, left: `${x}px`
+      top: y, left: x
     })
   }
 
@@ -81,10 +81,16 @@ const Render = ({ items }) => {
 
   const [markers, setMarkers] = useState([]);
   useEffect(() => {
-    setMarkers(items.map((m) => ({
+    const markersWithCoords = items.map((m) => ({
       ...m,
       ...markerCoords(m),
-    })))
+    }))
+    setMarkers(markersWithCoords)
+    if (markersWithCoords[0]) {
+      state.current.currentX = -1 * markersWithCoords[0].left / 2
+      state.current.currentY = -1 * markersWithCoords[0].top / 2
+      mapRef.current.style.transform = `translate3d(${-1 * markersWithCoords[0].top / 2}px, ${-1 * markersWithCoords[0].left / 2}px, 0) scale(${state.current.scale})`;
+    }
   }, [items, mapLoaded])
 
   const getDist = (t) => Math.hypot(t[1].pageX - t[0].pageX, t[1].pageY - t[0].pageY);
@@ -169,7 +175,7 @@ const Render = ({ items }) => {
           />
           {
             markers.map((i, idx) => (
-              <div key={idx} id={i.identity} style={{ zindex: `99${i}`, padding: "4px 6px", top: i.top, left: i.left, borderRadius: "8px", background: (i.identity == "current_user" ? "#e2ce30" : "white"), border: (i.identity == "current_user" ? "2px solid" : "white"), position: "absolute" }} >
+              <div key={idx} id={i.identity} style={{ zindex: `99${i}`, padding: "4px 6px", top: `${i.top}px`, left: `${i.left}px`, borderRadius: "8px", background: (i.identity == "current_user" ? "#e2ce30" : "white"), border: (i.identity == "current_user" ? "2px solid" : "white"), position: "absolute" }} >
                 {i.name}
               </div>
             ))

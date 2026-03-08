@@ -72,31 +72,10 @@ const Main = ({ located, setLocated }) => {
   const [askLoc, setAskLoc] = useState(!localStorage.getItem("latitude"))
   const [key, setKey] = useState("");
 
-  const [currentPlaceholder, setPlaceholder] = useState("Search workers");
-
-  useEffect(() => changePlaceholder(0), [])
-
-  const placeholders = ["Search workers", "mechanic", "theng kayattam", "തെങ്ങുകയറ്റം", "tile works", "maramvet"]
-
-  const changePlaceholder = (i) => {
-    setPlaceholder(placeholders[i])
-    setTimeout(() => changePlaceholder((i + 1) % placeholders.length), 1000)
-  }
-
   return(
     <div class="max-w-md mx-auto w-full px-4">
       <div class="max-w-md mx-auto w-full">
-        <input
-          placeholder={currentPlaceholder}
-          value={key}
-          onChange={(e) => {
-            setKey(e.target.value);
-            search(e.target.value);
-          }}
-          type="search"
-          style={{ fontSize: "20px" }}
-          className="w-full rounded-lg text-2xl px-8 py-6 mt-6 outline-none focus:outline-none"
-        />
+        <Search setKey={setKey} search={search} val={key} />
       </div>
       {
         located == false && <div className="max-w-md mx-auto">
@@ -211,6 +190,33 @@ const UserContact = ({ user }) => {
       </a>
       <div style={{ clear: "both" }} />
     </div>
+  )
+}
+
+const Search = ({ setKey, search, val }) => {
+  const [currentPlaceholder, setPlaceholder] = useState("Search workers");
+
+  useEffect(() => changePlaceholder(0), [])
+
+  const placeholders = ["Search workers", "mechanic", "theng kayattam", "തെങ്ങുകയറ്റം", "tile works", "maramvet"]
+
+  const changePlaceholder = (i) => {
+    setPlaceholder(placeholders[i])
+    setTimeout(() => changePlaceholder((i + 1) % placeholders.length), 1000)
+  }
+
+  return(
+    <input
+      placeholder={currentPlaceholder}
+      value={val}
+      onChange={(e) => {
+        setKey(e.target.value);
+        search(e.target.value);
+      }}
+      type="search"
+      style={{ fontSize: "20px" }}
+      className="w-full rounded-lg text-2xl px-8 py-6 mt-6 outline-none focus:outline-none"
+    />
   )
 }
 
