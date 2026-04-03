@@ -9,7 +9,6 @@ import "./assets/styles/base.css";
 import bg from "./assets/bg.jpg"
 import bg2 from "./assets/bg2.jpeg"
 import { btnStyle, textRegular, textWhite } from "./tailcss";
-import Map from "./Map";
 
 const Home = (props) => {
   return(
@@ -100,15 +99,6 @@ const Main = ({ located, setLocated }) => {
           ))
         }
       </div>
-
-      {
-        located && <Map targets={users.map((u) => ({
-          identity: u.name,
-          name: u.name,
-          lat: u.lat,
-          lng: u.lng,
-        }))} />
-      }
 
       <div class="max-w-md mx-auto">
         {
