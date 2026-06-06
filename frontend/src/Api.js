@@ -35,12 +35,18 @@ class Api {
     return results.data
   }
 
-  static async searchUsers(creds, key, lat, lng) {
+  static async searchUsers(creds, key, lat, lng, date) {
+    const dateArg = {}
+    if (date) {
+      dateArg.date = date;
+      dateArg.date_given = true;
+    }
     const results = await axios.get(url("users"), {
       params: {
         key: key,
         lat: lat,
         lng: lng,
+        ...dateArg
       }
     })
     return results.data

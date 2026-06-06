@@ -36,24 +36,6 @@ const Main = ({ located, setLocated }) => {
   const [locError, setLocError] = useState("");
   const [locating, setLocating] = useState(false);
 
-  const search = useCallback(debounce(async (key) => {
-
-    if (!key) {
-      setUsers(defaults)
-      return
-    }
-
-    const lat = localStorage.getItem("latitude")
-    const lng = localStorage.getItem("longitude")
-
-    if (lat && lng) {
-      const results = await Api.searchUsers({}, key, lat, lng);
-      setUsers(results.data || []);
-    } else {
-      setUsers(defaults);
-    }
-  }, 500), [])
-
   const defaults = []
   const defaultss = [{
     name: "Police",
@@ -77,15 +59,37 @@ const Main = ({ located, setLocated }) => {
 
   const [showDayMarker, setShowDayMarker] = useState(false);
 
+  const search = useCallback(debounce(async (key, date) => {
+
+    if (!key) {
+      setUsers(defaults)
+      return
+    }
+
+    const lat = localStorage.getItem("latitude")
+    const lng = localStorage.getItem("longitude")
+
+    if (lat && lng) {
+      const results = await Api.searchUsers({}, key, lat, lng, date?.startOf("day")?.format());
+      setUsers(results.data || []);
+    } else {
+      setUsers(defaults);
+    }
+  }, 500), [date])
+
+  useEffect(() => {
+    search(key, date)
+  }, [date])
+
   return(
     <div class="max-w-md mx-auto w-full px-4">
       <div class="max-w-md mx-auto w-full">
-        <Search setKey={setKey} search={search} val={key} />
+        <Search setKey={setKey} search={(k) => search(k, date)} val={key} />
       </div>
       <div className="mt-4 flex gap-2 p-4 rounded-xl overflow-x-auto max-w-2xl">
         {
           myDateStrip.map((d) => (
-            <div onClick={() => setDate(d)} className={"clickable flex flex-col items-center justify-center p-3 rounded-lg shadow-md min-w-[60px] w-1/4" + (date && date.format("YYYY-MM-DD") == d.format("YYYY-MM-DD") ? " bg-blue-500 text-white" : " text-blue bg-white")}>
+            <div onClick={() => date && date.format("YYYY-MM-DD") == d.format("YYYY-MM-DD") ? setDate() : setDate(d)} className={"clickable flex flex-col items-center justify-center p-3 rounded-lg shadow-md min-w-[60px] w-1/4" + (date && date.format("YYYY-MM-DD") == d.format("YYYY-MM-DD") ? " bg-blue-500 text-white" : " text-blue bg-white")}>
               <span className="text-xs font-semibold uppercase text-blue-10">{d.format('ddd')}</span>
               <span className="text-lg font-bold">{d.format('D')}</span>
             </div>
