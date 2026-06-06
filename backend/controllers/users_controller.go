@@ -30,6 +30,8 @@ type UserSearchHTTP struct {
   Key string `query:"key"`
   Lat            string `query:"lat"`
   Lng            string `query:"lng"`
+  Date           string `query:"date"`
+  DateGiven      bool   `query:"date_given"`
 }
 
 func rangeIn(low, hi int) int {
@@ -194,7 +196,7 @@ func GetDates(c echo.Context) error {
   _ = db.Model(
     models.UserDate{},
   ).Where(
-    "user_dates.user_id = ? AND user_dates.deleted_at IS NULL", existingUser.ID,
+    "user_dates.user_id = ?", existingUser.ID,
   ).Select(
     "user_dates.start",
   ).Scan(&UsersWithDate)
@@ -312,7 +314,7 @@ func UserSearch(c echo.Context) error {
   distanceQuery := "distance(users.lat, users.lng," + params.Lat + "," + params.Lng + ")"
   order := distanceQuery + " ASC"
 
-	db.Model(&models.User{}).Select(
+	scope := db.Model(&models.User{}).Select(
     "users.lat, users.lng, users.name, users.phone, users.country_code, array_to_string(ARRAY_REMOVE(ARRAY_AGG(DISTINCT correct_tag.tag), NULL), ', ') as tags, " + distanceQuery + " AS distance" ,
   ).Joins(
     "inner join user_jobs on user_jobs.user_id = users.id",
@@ -320,7 +322,14 @@ func UserSearch(c echo.Context) error {
     "inner join job_tags on job_tags.job_id = user_jobs.job_id",
   ).Joins(
     "left join job_tags correct_tag on correct_tag.job_id = user_jobs.job_id and correct_tag.correct = true",
-  ).Where(
+  )
+
+  if params.DateGiven {
+    scope = scope.Joins("left join user_dates on user_dates.user_id = users.id AND user_dates.start = ?", params.Date)
+    scope = scope.Where("user_dates.id is NULL")
+  }
+
+  scope.Where(
     "users.lat > 0 AND users.activated = ? AND (job_tags.tag ILIKE ? OR job_tags.tag ILIKE ? OR job_tags.tag %> ?)", true, params.Key + "%", "% " + params.Key + "%", params.Key,
   ).Order(
   	order,

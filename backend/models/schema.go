@@ -34,7 +34,6 @@ type UserJob struct {
 }
 
 type UserDate struct {
-  gorm.Model
   ID              uint                `gorm:"primaryKey"`
   UserId          *uint               `gorm:"index"`
   Start           time.Time
