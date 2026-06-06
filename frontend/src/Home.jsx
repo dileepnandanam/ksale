@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext, useCallback, useMemo } from "react";
 import { Link, Navigate } from "react-router";
 import Api from "./Api";
 import phone from "./assets/phone.png";
@@ -9,6 +9,7 @@ import "./assets/styles/base.css";
 import bg from "./assets/bg.jpg"
 import bg2 from "./assets/bg2.jpeg"
 import { btnStyle, textRegular, textWhite } from "./tailcss";
+import dayjs from "dayjs";
 
 const Home = (props) => {
   return(
@@ -71,10 +72,25 @@ const Main = ({ located, setLocated }) => {
   const [askLoc, setAskLoc] = useState(!localStorage.getItem("latitude"))
   const [key, setKey] = useState("");
 
+  const myDateStrip = generateDateStrip(dayjs(), 30);
+  const [date, setDate] = useState();
+
+  const [showDayMarker, setShowDayMarker] = useState(false);
+
   return(
     <div class="max-w-md mx-auto w-full px-4">
       <div class="max-w-md mx-auto w-full">
         <Search setKey={setKey} search={search} val={key} />
+      </div>
+      <div className="mt-4 flex gap-2 p-4 rounded-xl overflow-x-auto max-w-2xl">
+        {
+          myDateStrip.map((d) => (
+            <div onClick={() => setDate(d)} className={"clickable flex flex-col items-center justify-center p-3 rounded-lg shadow-md min-w-[60px] w-1/4" + (date && date.format("YYYY-MM-DD") == d.format("YYYY-MM-DD") ? " bg-blue-500 text-white" : " text-blue bg-white")}>
+              <span className="text-xs font-semibold uppercase text-blue-10">{d.format('ddd')}</span>
+              <span className="text-lg font-bold">{d.format('D')}</span>
+            </div>
+          ))
+        }
       </div>
       {
         located == false && <div className="max-w-md mx-auto">
@@ -103,6 +119,17 @@ const Main = ({ located, setLocated }) => {
       <div class="max-w-md mx-auto">
         {
           (user && user.Current()?.ID) && <>
+            <div
+              onClick={() => {
+                setShowDayMarker(true)
+              }}
+              className={`clickable ${btnStyle}`}
+            >
+              My Busy Days
+            </div>
+            {
+              showDayMarker && <BusyMarker />
+            }
             <div
               onClick={() => {
                 user.Unset();
@@ -209,5 +236,101 @@ const Search = ({ setKey, search, val }) => {
     />
   )
 }
+
+const BusyMarker = () => {
+  const [dates, setDates] = useState([]);
+
+  useEffect(() => {
+    fetchDates();
+  }, []);
+
+  const fetchDates = async () => {
+    try {
+      const result = await Api.getUserDates();
+
+      setDates(
+        (result.data.dates || []).map((d) =>
+          dayjs(d.Start)
+        )
+      );
+    } catch (err) {
+      console.error("Failed to fetch dates", err);
+    }
+  };
+
+  const dateStrip = useMemo(
+    () => generateDateStrip(dayjs(), 30),
+    []
+  );
+
+  const isBusy = (date) => {
+    return dates.some((d) => d.isSame(date, "day"));
+  };
+
+  const toggleDate = async (date) => {
+    const busy = isBusy(date);
+
+    try {
+      // Sends: 2026-06-07T00:00:00+05:30
+      await Api.setUserDate(
+        date.startOf("day").format(),
+        busy
+      );
+
+      if (busy) {
+        setDates((prev) =>
+          prev.filter((d) => !d.isSame(date, "day"))
+        );
+      } else {
+        setDates((prev) => [
+          ...prev,
+          date.startOf("day"),
+        ]);
+      }
+    } catch (err) {
+      console.error("Failed to update date", err);
+    }
+  };
+
+  return (
+    <div className="mt-4 flex gap-2 p-4 rounded-xl overflow-x-auto max-w-2xl">
+      {dateStrip.map((date) => {
+        const busy = isBusy(date);
+
+        return (
+          <div
+            key={date.format("YYYY-MM-DD")}
+            onClick={() => toggleDate(date)}
+            className={`clickable flex flex-col items-center justify-center p-3 rounded-lg shadow-md min-w-[60px] cursor-pointer transition-colors ${
+              busy
+                ? "bg-blue-500 text-white"
+                : "bg-white text-black-500"
+            }`}
+          >
+            <span className="text-xs font-semibold uppercase">
+              {date.format("ddd")}
+            </span>
+
+            <span className="text-lg font-bold">
+              {date.format("D")}
+            </span>
+
+            <span className="text-xs">
+              {date.format("MMM")}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const generateDateStrip = (startDate, length = 30) => {
+  return Array.from({ length }, (_, i) =>
+    dayjs(startDate)
+      .add(i, "day")
+      .startOf("day")
+  );
+};
 
 export default Home;

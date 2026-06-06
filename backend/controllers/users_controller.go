@@ -9,6 +9,7 @@ import (
   crand "crypto/rand"
   "encoding/base32"
   "strconv"
+  "time"
 )
 
 type LocateHTTP struct {
@@ -178,6 +179,67 @@ func UserActivate(c echo.Context) error {
   return c.JSON(http.StatusOK, map[string]interface{}{"success": false, "message": "could_not_activate_user" })
 }
 
+func GetDates(c echo.Context) error {
+  existingUser := c.Get("currentUser").(models.User)
+  
+
+  type UserWithDate struct {
+    UserId          *uint
+    Start           time.Time
+    End             time.Time
+  }
+
+  var UsersWithDate []UserWithDate
+
+  _ = db.Model(
+    models.UserDate{},
+  ).Where(
+    "user_dates.user_id = ? AND user_dates.deleted_at IS NULL", existingUser.ID,
+  ).Select(
+    "user_dates.start",
+  ).Scan(&UsersWithDate)
+
+  return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "dates_given", "data": map[string]interface{}{ "dates": UsersWithDate } })
+
+}
+
+func SetDate(c echo.Context) error {
+  existingUser := c.Get("currentUser").(models.User)
+
+  type DateHTTP struct {
+    Start string `json:"start"`
+    Busy bool  `json:"busy"`
+  }
+  params := new(DateHTTP)
+  c.Bind(params)
+
+  type UserWithDate struct {
+    UserId          *uint
+    Start           time.Time
+    End             time.Time
+  }
+
+  var userDate models.UserDate
+
+  if params.Busy {
+    _ = db.Model(
+      models.UserDate{},
+    ).Where(
+      "user_dates.user_id = ? AND Start = ?", existingUser.ID, params.Start,
+    ).Select(
+      "user_dates.start",
+    ).Delete(&models.UserDate{})
+  } else {
+    userDate.UserId = &existingUser.ID
+    parsedTime, _ := time.Parse(time.RFC3339, params.Start)
+    userDate.Start = parsedTime
+    db.Unscoped().Create(&userDate)
+  }
+
+  return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "dates_given", "data": map[string]interface{}{ "dates": userDate } })
+
+}
+
 
 func GetUser(c echo.Context) error {
   existingUser := c.Get("currentUser").(models.User)
@@ -259,7 +321,7 @@ func UserSearch(c echo.Context) error {
   ).Joins(
     "left join job_tags correct_tag on correct_tag.job_id = user_jobs.job_id and correct_tag.correct = true",
   ).Where(
-    "users.lat > 0 AND users.activated = ? AND (job_tags.tag ILIKE ? OR job_tags.tag ILIKE ?)", true, params.Key + "%", "% " + params.Key + "%",
+    "users.lat > 0 AND users.activated = ? AND (job_tags.tag ILIKE ? OR job_tags.tag ILIKE ? OR job_tags.tag %> ?)", true, params.Key + "%", "% " + params.Key + "%", params.Key,
   ).Order(
   	order,
   ).Limit(30).Group("users.id, users.name, users.phone, users.country_code").Scan(&results)

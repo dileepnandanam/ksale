@@ -33,6 +33,16 @@ type UserJob struct {
   UpdatedAt       time.Time
 }
 
+type UserDate struct {
+  gorm.Model
+  ID              uint                `gorm:"primaryKey"`
+  UserId          *uint               `gorm:"index"`
+  Start           time.Time
+  End             time.Time
+  CreatedAt       time.Time
+  UpdatedAt       time.Time
+}
+
 type Job struct {
   gorm.Model
   ID           uint                `gorm:"primaryKey" json:"id"`
@@ -51,6 +61,6 @@ type JobTag struct {
   ID           uint                `gorm:"primaryKey" json:"id"`
   JobId        uint                `gorm:"index"`
   Job          Job                 `gorm:"foreignKey:JobId"`
-  Tag          string              `gorm:"index" json:"tag"`
+  Tag          string              `gorm:"index:job_tag_tgm,type:gin,option:gin_trgm_ops" json:"tag"`
   Correct      bool                `json:"correct"`
 }

@@ -31,6 +31,7 @@ func RunHTTPServer() {
   db.AutoMigrate(&models.Job{})
   db.AutoMigrate(&models.JobTag{})
   db.AutoMigrate(&models.UserJob{})
+  db.AutoMigrate(&models.UserDate{})
 
   geo := `
     CREATE OR REPLACE FUNCTION distance(lat1 FLOAT, lon1 FLOAT, lat2 FLOAT, lon2 FLOAT) RETURNS FLOAT AS $$
@@ -43,6 +44,7 @@ func RunHTTPServer() {
     $$ LANGUAGE plpgsql;
   `
   db.Exec(geo)
+  db.Exec("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
 
   controllers.SetDb(db)
   SetDb(db)

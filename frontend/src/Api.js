@@ -75,6 +75,16 @@ class Api {
     return results.data
   }
 
+  static async getUserDates() {
+    const results = await axios.get(url(`users/get_dates`))
+    return results.data
+  }
+
+  static async setUserDate(date, busy) {
+    const results = await axios.put(url("users/set_date"), { start: date, busy: busy })
+    return results.data
+  }
+
   static async getUser() {
     const results = await axios.get(url(`users/current`))
     return results.data
