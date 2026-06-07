@@ -10,6 +10,7 @@ import (
   "encoding/base32"
   "strconv"
   "time"
+  "math"
 )
 
 type LocateHTTP struct {
@@ -156,7 +157,9 @@ func UserLocate(c echo.Context) error {
 
   if result.Error == nil {
   	existingUser.Lat = params.Lat
+    existingUser.LatBox = int(math.Trunc(params.Lat * 100))
   	existingUser.Lng = params.Lng
+    existingUser.LngBox = int(math.Trunc(params.Lng * 100))
   	db.Save(&existingUser)
   	return c.JSON(http.StatusOK, map[string]interface{}{"success": true, "message": "located", "data": map[string]interface{}{ "ID": existingUser.ID } })
   }
@@ -291,6 +294,25 @@ func UpdateUser(c echo.Context) error {
 }
 
 
+func surroundingBoxes(lat, lon float64) [][]int {
+  baseLat := int(math.Trunc(lat*100))
+  baseLon := int(math.Trunc(lon*100))
+
+  var latBoxes []int
+  var lngBoxes []int
+
+  for dLat := -1; dLat <= 1; dLat++ {
+    for dLon := -1; dLon <= 1; dLon++ {
+      latBoxes = append(latBoxes, baseLat + dLat)
+      lngBoxes = append(lngBoxes, baseLon + dLon)
+    }
+  }
+  var total [][]int
+  total = append(total, latBoxes)
+  total = append(total, lngBoxes)
+  return total
+}
+
 func UserSearch(c echo.Context) error {
 	params := new(UserSearchHTTP)
 	c.Bind(params)
@@ -304,6 +326,11 @@ func UserSearch(c echo.Context) error {
     Lat    float64 `json:"lat"`
     Lng    float64 `json:"lng"`
   }
+
+  lat, _ := strconv.ParseFloat(params.Lat, 64)
+  lng, _ := strconv.ParseFloat(params.Lng, 64)
+
+  latLngBoxes := surroundingBoxes(lat, lng)
 
   var results []UserAndJob
 
@@ -323,6 +350,8 @@ func UserSearch(c echo.Context) error {
   ).Joins(
     "left join job_tags correct_tag on correct_tag.job_id = user_jobs.job_id and correct_tag.correct = true",
   )
+
+  scope = scope.Where("users.lat_box in (?) AND users.lng_box in (?)", latLngBoxes[0], latLngBoxes[1])
 
   if params.DateGiven {
     scope = scope.Joins("left join user_dates on user_dates.user_id = users.id AND user_dates.start = ?", params.Date)

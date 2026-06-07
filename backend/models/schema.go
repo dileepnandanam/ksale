@@ -19,6 +19,8 @@ type User struct {
   DeletedAt       gorm.DeletedAt      `gorm:"index"`
   Lat             float64             `gorm:"type:decimal(10,8)"`
   Lng             float64             `gorm:"type:decimal(11,8)"`
+  LatBox          int                 `gorm:"index"`
+  LngBox          int                 `gorm:"index"`
   Admin           bool
 }
 
@@ -60,6 +62,6 @@ type JobTag struct {
   ID           uint                `gorm:"primaryKey" json:"id"`
   JobId        uint                `gorm:"index"`
   Job          Job                 `gorm:"foreignKey:JobId"`
-  Tag          string              `gorm:"index:job_tag_tgm,type:gin,option:gin_trgm_ops" json:"tag"`
+  Tag          string              `json:"tag"`
   Correct      bool                `json:"correct"`
 }

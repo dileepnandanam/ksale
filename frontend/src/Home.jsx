@@ -92,10 +92,23 @@ const Main = ({ located, setLocated }) => {
             <div onClick={() => date && date.format("YYYY-MM-DD") == d.format("YYYY-MM-DD") ? setDate() : setDate(d)} className={"clickable flex flex-col items-center justify-center p-3 rounded-lg shadow-md min-w-[60px] w-1/4" + (date && date.format("YYYY-MM-DD") == d.format("YYYY-MM-DD") ? " bg-blue-500 text-white" : " text-blue bg-white")}>
               <span className="text-xs font-semibold uppercase text-blue-10">{d.format('ddd')}</span>
               <span className="text-lg font-bold">{d.format('D')}</span>
+              <span className="text-xs">
+                {d.format("MMM")}
+              </span>
             </div>
           ))
         }
       </div>
+      {
+        users.length > 0 &&
+        <div style={{ display: "block", width: "100%", padding: "12px 0px" }}>
+          {
+            users.map((user) => (
+              <UserContact user={user} />
+            ))
+          }
+        </div>
+      }
       {
         located == false && <div className="max-w-md mx-auto">
           <div className={textWhite}>
@@ -111,15 +124,6 @@ const Main = ({ located, setLocated }) => {
           }
         </div>
       }
-
-      <div style={{ display: "block", width: "100%", padding: "12px 0px" }}>
-        {
-          users.map((user) => (
-            <UserContact user={user} />
-          ))
-        }
-      </div>
-
       <div class="max-w-md mx-auto">
         {
           (user && user.Current()?.ID) && <>

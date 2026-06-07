@@ -45,6 +45,11 @@ func RunHTTPServer() {
   `
   db.Exec(geo)
   db.Exec("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
+  db.Exec(`
+    CREATE INDEX IF NOT EXISTS job_tag_tgm
+    ON job_tags
+    USING GIN (tag gin_trgm_ops);
+  `)
 
   controllers.SetDb(db)
   SetDb(db)
